@@ -1,0 +1,31 @@
+{
+  "name": "gatsby-plugin-local-search",
+  "version": "0.1.0",
+  "description": "Gatsby plugin for providing client-side search for data available to Gatsby",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "babel src --out-dir '.'",
+    "format": "prettier --write 'src/**/*.js' 'README.md'",
+    "watch": "npm run build -- --watch"
+  },
+  "homepage": "https://github.com/angeloashmore/gatsby-plugin-local-search",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angeloashmore/gatsby-plugin-local-search.git"
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "search"
+  ],
+  "author": "Angelo Ashmore <angelo.ashmore@walltowall.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-rc.1",
+    "@babel/core": "^7.0.0-rc.1",
+    "prettier": "^1.14.2"
+  },
+  "dependencies": {
+    "lunr": "^2.3.2"
+  }
+}
