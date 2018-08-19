@@ -23,10 +23,10 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-rc.1",
     "@babel/core": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
     "prettier": "^1.14.2"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.0.0-rc.1",
     "lunr": "^2.3.2"
   }
 }
