@@ -15,11 +15,10 @@ const prepareNode = graphql => async ({
   query,
   normalizer,
 }) => {
-  const documents = await R.pipeP(
-    graphql,
-    normalizer,
-  )(query)
+  const result = await graphql(query)
+  if (result.errors) throw R.head(result.errors)
 
+  const documents = normalizer(result)
   if (R.isEmpty(documents)) return
 
   const fields = R.pipe(
@@ -30,8 +29,8 @@ const prepareNode = graphql => async ({
 
   const index = lunr(function() {
     this.ref(ref)
-    R.forEach(this.field)(fields)
-    R.forEach(this.add)(documents)
+    fields.forEach(x => this.field(x))
+    documents.forEach(x => this.add(x))
   })
 
   const LocalSearchNode = createNodeFactory(name)
