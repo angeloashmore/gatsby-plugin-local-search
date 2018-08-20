@@ -30,8 +30,8 @@ const prepareNode = graphql => async ({
 
   const index = lunr(function() {
     this.ref(ref)
-    fields.forEach(x => this.field(x))
-    documents.forEach(x => this.add(x))
+    R.forEach(this.field)(fields)
+    R.forEach(this.add)(documents)
   })
 
   const LocalSearchNode = createNodeFactory(name)
