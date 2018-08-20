@@ -3,7 +3,7 @@ import lunr from 'lunr'
 import R from 'ramda'
 import { map } from 'p-iteration'
 
-const { createNodeFactory } = createNodeHelpers({ typePrefix: 'SearchIndex' })
+const { createNodeFactory } = createNodeHelpers({ typePrefix: 'LocalSearch' })
 
 /***
  * Takes a query object with accessory options and returns a node to be passed
@@ -20,7 +20,7 @@ const prepareNode = graphql => async ({
     normalizer,
   )(query)
 
-  if (R.empty(documents)) return
+  if (R.isEmpty(documents)) return
 
   const fields = R.pipe(
     R.head,
@@ -34,9 +34,9 @@ const prepareNode = graphql => async ({
     documents.forEach(x => this.add(x))
   })
 
-  const SearchIndexNode = createNodeFactory(name)
+  const LocalSearchNode = createNodeFactory(name)
 
-  return SearchIndexNode({
+  return LocalSearchNode({
     id: name,
     index: JSON.stringify(index),
   })
