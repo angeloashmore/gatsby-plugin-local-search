@@ -1,7 +1,7 @@
 import createNodeHelpers from 'gatsby-node-helpers'
 import lunr from 'lunr'
+import { forEach } from 'p-iteration'
 import R from 'ramda'
-import { map } from 'p-iteration'
 
 const { createNodeFactory } = createNodeHelpers({ typePrefix: 'LocalSearch' })
 
@@ -45,7 +45,7 @@ export const createPages = async (
   { graphql, actions: { createNode } },
   { queries = [] },
 ) =>
-  map(
+  forEach(
     queries,
     R.pipeP(
       prepareNode(graphql),
