@@ -3,8 +3,8 @@
 Gatsby plugin for providing client-side search for data available in Gatsby's
 GraphQL layer using [Lunr][lunr].
 
-[react-lunr][react-lunr] is a compatible React component to query the generated
-search index and render your results.
+[`react-lunr`][react-lunr] is a compatible React component to query the
+generated search index and render your results.
 
 ## Install
 
