@@ -6,19 +6,20 @@ import R from 'ramda'
 const { createNodeFactory } = createNodeHelpers({ typePrefix: 'LocalSearch' })
 
 /***
- * Takes a query object with accessory options and returns a node to be passed
- * to `createNode`.
+ * Takes a query object with accessory options and returns an object to be
+ * passed to `createNode`.
  */
 const prepareNode = graphql => async ({
   name,
   ref = 'id',
   query,
   normalizer,
+  store: storeFields = [],
 }) => {
   const result = await graphql(query)
   if (result.errors) throw R.head(result.errors)
 
-  const documents = normalizer(result)
+  const documents = await Promise.resolve(normalizer(result))
   if (R.isEmpty(documents)) return
 
   const fields = R.pipe(
@@ -33,11 +34,17 @@ const prepareNode = graphql => async ({
     documents.forEach(x => this.add(x))
   })
 
+  const store = R.pipe(
+    R.map(R.pick(storeFields)),
+    R.indexBy(R.prop(ref)),
+  )(documents)
+
   const LocalSearchNode = createNodeFactory(name)
 
   return LocalSearchNode({
     id: name,
     index: JSON.stringify(index),
+    store: JSON.stringify(store),
   })
 }
 
