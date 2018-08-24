@@ -1,6 +1,5 @@
 import createNodeHelpers from 'gatsby-node-helpers'
 import lunr from 'lunr'
-import { forEach } from 'p-iteration'
 import R from 'ramda'
 
 const { createNodeFactory } = createNodeHelpers({ typePrefix: 'LocalSearch' })

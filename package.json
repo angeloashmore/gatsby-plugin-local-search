@@ -30,7 +30,6 @@
   "dependencies": {
     "gatsby-node-helpers": "^0.3.0",
     "lunr": "^2.3.2",
-    "p-iteration": "^1.1.7",
     "ramda": "^0.25.0"
   },
   "peerDependencies": {
