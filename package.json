@@ -16,6 +16,7 @@
   "keywords": [
     "gatsby",
     "gatsby-plugin",
+    "lunr",
     "search"
   ],
   "author": "Angelo Ashmore <angelo.ashmore@walltowall.com>",
