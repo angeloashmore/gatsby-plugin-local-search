@@ -46,8 +46,8 @@ module.exports = {
             id: node.id,
             path: node.frontmatter.path,
             title: node.frontmatter.title,
-            body: node.rawMarkdownBody
-          }))
+            body: node.rawMarkdownBody,
+          })),
       },
     },
   ],
