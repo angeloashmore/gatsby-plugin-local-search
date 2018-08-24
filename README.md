@@ -79,7 +79,7 @@ Lunr search functionality up to you.
 
 If you are looking for a pre-made React component that can handle search, but
 let you define your own UI, [`react-lunr`][react-lunr] is a great option
-(disclosure: I wrote the component for this plugin);
+(disclosure: I wrote the component for this plugin).
 
 [lunr]: https://lunrjs.com/
 [react-lunr]: https://github.com/angeloashmore/react-lunr
