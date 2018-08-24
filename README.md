@@ -40,7 +40,7 @@ module.exports = {
             }
           }
         `,
-        store: ['id', 'path'],
+        store: ['id', 'path', 'title'],
         normalizer: ({ data }) =>
           data.allMarkdownRemark.edges.map(({ node }) => ({
             id: node.id,
