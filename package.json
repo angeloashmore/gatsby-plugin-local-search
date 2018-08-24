@@ -32,5 +32,8 @@
     "lunr": "^2.3.2",
     "p-iteration": "^1.1.7",
     "ramda": "^0.25.0"
+  },
+  "peerDependencies": {
+    "gatsby": ">2.0.0-alpha"
   }
 }
