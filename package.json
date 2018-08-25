@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-local-search",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Gatsby plugin for providing client-side search for data available in Gatsby's GraphQL layer",
   "scripts": {
     "prepublish": "npm run build",
