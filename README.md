@@ -20,10 +20,16 @@ module.exports = {
     // You can have multiple instances of this plugin to create indexes with
     // different names. For example, multi-lingual sites could create an index
     // for each language.
+    //
+    // All options are required.
     {
       resolve: 'gatsby-plugin-local-search',
       options: {
+        // A unique name for the search index. This should be descriptive of
+        // what the index contains.
         name: 'pages',
+
+        // GraphQL query used to fetch all data for the search index.
         query: `
           {
             allMarkdownRemark {
@@ -40,7 +46,14 @@ module.exports = {
             }
           }
         `,
+
+        // List of keys to store and make available in your UI. The values of
+        // the keys are taken from the normalizer function below.
         store: ['id', 'path', 'title'],
+
+        // Function used to map the result from the GraphQL query. This should
+        // return an array of items to index in the form of flat objects
+        // containing properties to index.
         normalizer: ({ data }) =>
           data.allMarkdownRemark.edges.map(({ node }) => ({
             id: node.id,
