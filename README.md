@@ -118,4 +118,5 @@ The following React components/hooks are recommended pairings:
 
 [flexsearch]: https://github.com/nextapps-de/flexsearch
 [lunr]: https://lunrjs.com/
+[react-flexsearch]: https://github.com/angeloashmore/react-flexsearch
 [react-lunr]: https://github.com/angeloashmore/react-lunr
