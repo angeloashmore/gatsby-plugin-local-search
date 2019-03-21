@@ -90,7 +90,7 @@ accessed with `localSearchPages`.
 
 The search index and store are made available as fields on the node.
 
-- **`index`**: (string) The search index created using the engine selected in
+- **`index`**: (String) The search index created using the engine selected in
   the plugin options.
 - **`store`**: (JSON) The store used to map a search result's `ref` key to data.
 
