@@ -33,6 +33,7 @@
     "standard-version": "^5.0.2"
   },
   "dependencies": {
+    "flexsearch": "^0.6.21",
     "gatsby-node-helpers": "^0.3.0",
     "lunr": "^2.3.6",
     "ramda": "^0.26.1"

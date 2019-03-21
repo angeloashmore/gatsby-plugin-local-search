@@ -1,10 +1,17 @@
 # gatsby-plugin-local-search
 
 Gatsby plugin for providing client-side search for data available in Gatsby's
-GraphQL layer using [Lunr][lunr].
+GraphQL layer using a variety of engines.
 
-[`react-lunr`][react-lunr] is a compatible React component to query the
-generated search index and render your results.
+The following engines are supported:
+
+- [FlexSearch][flexsearch] (fastest, recommended)
+- [Lunr][lunr]
+
+This plugin provides a search index and store using the selected engine. To
+display search results, pair the index and store with a compatible React hook
+or component. See [Displaying the search
+results](#displaying-the-search-results).
 
 ## Install
 
@@ -18,18 +25,21 @@ generated search index and render your results.
 module.exports = {
   plugins: [
     // You can have multiple instances of this plugin to create indexes with
-    // different names. For example, multi-lingual sites could create an index
-    // for each language.
-    //
-    // All options are required.
+    // different names or engines. For example, multi-lingual sites could create
+    // an index for each language.
     {
       resolve: 'gatsby-plugin-local-search',
       options: {
         // A unique name for the search index. This should be descriptive of
-        // what the index contains.
+        // what the index contains. This is required.
         name: 'pages',
 
-        // GraphQL query used to fetch all data for the search index.
+        // Set the search engine to create the index. This is required.
+        // The following engines are supported: flexsearch, lunr
+        engine: 'flexsearch',
+
+        // GraphQL query used to fetch all data for the search index. This is
+        // required.
         query: `
           {
             allMarkdownRemark {
@@ -47,13 +57,18 @@ module.exports = {
           }
         `,
 
+        // Field used as the reference value for each document.
+        // Default: 'id'.
+        ref: 'id',
+
         // List of keys to store and make available in your UI. The values of
         // the keys are taken from the normalizer function below.
+        // Default: all fields
         store: ['id', 'path', 'title'],
 
         // Function used to map the result from the GraphQL query. This should
         // return an array of items to index in the form of flat objects
-        // containing properties to index.
+        // containing properties to index. This is required.
         normalizer: ({ data }) =>
           data.allMarkdownRemark.edges.map(({ node }) => ({
             id: node.id,
@@ -73,8 +88,14 @@ A new node type becomes available named `localSearch${name}`, where `${name}`
 is the name provided in the options. In the above example, the node would be
 accessed with `localSearchPages`.
 
-The Lunr index and store are made available as fields on the node. Both are
-large strings that can be run through `JSON.parse` as necessary.
+The search index and store are made available as fields on the node.
+
+- **`index`**: (string) The search index created using the engine selected in
+  the plugin options.
+- **`store`**: (JSON) The store used to map a search result's `ref` key to data.
+
+Note that store is an array of objects but does not require you to explicitly
+query each field.
 
 ```graphql
 {
@@ -87,12 +108,14 @@ large strings that can be run through `JSON.parse` as necessary.
 
 ## Displaying the search results
 
-This plugin provides a Lunr index and store object, but leaves presentation and
-Lunr search functionality up to you.
+This plugin provides a search index and store object but leaves presentation
+and search functionality up to you.
 
-If you are looking for a pre-made React component that can handle search, but
-let you define your own UI, [`react-lunr`][react-lunr] is a great option
-(disclosure: I wrote the component for this plugin).
+The following React components/hooks are recommended pairings:
 
+- **FlexSearch**: [`react-flexsearch`][react-flexsearch] (hook)
+- **Lunr**: [`react-lunr`][react-lunr] (hook, component)
+
+[flexsearch]: https://github.com/nextapps-de/flexsearch
 [lunr]: https://lunrjs.com/
 [react-lunr]: https://github.com/angeloashmore/react-lunr
