@@ -94,8 +94,8 @@ The search index and store are made available as fields on the node.
   the plugin options.
 - **`store`**: (JSON) The store used to map a search result's `ref` key to data.
 
-Note that store is an array of objects but does not require you to explicitly
-query each field.
+Note that `store` is an object but does not require you to explicitly query
+each field.
 
 ```graphql
 {
