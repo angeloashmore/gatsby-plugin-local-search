@@ -84,7 +84,7 @@ export const createPages = async (
 
   // Default to all fields if storeFields is not provided
   const store = R.pipe(
-    R.map(R.pick(storeFields || fields)),
+    R.map(R.pick(storeFields || [...fields, ref])),
     R.indexBy(R.prop(ref)),
   )(documents)
 
