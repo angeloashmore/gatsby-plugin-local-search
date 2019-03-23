@@ -18,14 +18,9 @@ export const setFieldsOnGraphQLNodeType = ({ type }) => {
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
 const createFlexSearchIndexExport = ({ documents, fields, ref }) => {
-  const index = new FlexSearch({
-    doc: {
-      id: ref,
-      field: fields,
-    },
-  })
+  const index = FlexSearch.create()
 
-  index.add(documents)
+  documents.forEach(doc => index.add(doc[ref], JSON.stringify(doc)))
 
   return index.export()
 }
