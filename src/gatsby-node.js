@@ -4,7 +4,11 @@ import FlexSearch from 'flexsearch'
 import * as R from 'ramda'
 import lowerFirst from 'lodash.lowerfirst'
 
-const { createNodeFactory, generateTypeName } = createNodeHelpers({
+const {
+  createNodeFactory,
+  generateNodeId,
+  generateTypeName,
+} = createNodeHelpers({
   typePrefix: 'LocalSearch',
 })
 
@@ -47,21 +51,22 @@ const createIndexExport = ({ engine, ...args }) => {
   }
 }
 
-export const sourceNodes = ({ actions: { createTypes } }) => {
+// Set the GraphQL type for LocalSearchIndex.
+export const sourceNodes = async ({ actions: { createTypes } }) => {
   createTypes(`
     type LocalSearchIndex implements Node {
-      id: String!
+      id: ID!
       engine: String!
       index: String!
-      store: JSON!
+      store: String!
     }
   `)
 }
 
-// Run GraphQL query during createPages and save to cache. The result will be
-// used later in the bootstrap process to create the index node.
+// Create index and store during createPages and save to cache. The cached
+// values will be used in createResolvers.
 export const createPages = async (
-  { graphql, cache, actions: { createNode } },
+  { graphql, cache },
   { name, ref = 'id', store: storeFields, query, normalizer, engine },
 ) => {
   const result = await graphql(query)
@@ -116,7 +121,7 @@ export const createResolvers = async (
             id: name,
             engine,
             index,
-            store,
+            store: JSON.stringify(store),
           }
         },
       },

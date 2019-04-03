@@ -40,7 +40,7 @@
     "ramda": "^0.26.1"
   },
   "peerDependencies": {
-    "gatsby": ">2.0.0-alpha"
+    "gatsby": ">=2.2.0"
   },
   "husky": {
     "hooks": {
