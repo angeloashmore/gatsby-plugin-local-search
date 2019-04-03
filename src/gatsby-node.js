@@ -1,19 +1,12 @@
 import createNodeHelpers from 'gatsby-node-helpers'
-import { GraphQLJSON } from 'gatsby/graphql'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 import * as R from 'ramda'
+import lowerFirst from 'lodash.lowerfirst'
 
-const { createNodeFactory } = createNodeHelpers({ typePrefix: 'LocalSearch' })
-
-export const setFieldsOnGraphQLNodeType = ({ type }) => {
-  if (!type.name.startsWith('LocalSearch')) return
-
-  // Allow querying for store without providing subfields
-  return {
-    store: { type: GraphQLJSON },
-  }
-}
+const { createNodeFactory, generateTypeName } = createNodeHelpers({
+  typePrefix: 'LocalSearch',
+})
 
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
@@ -54,8 +47,21 @@ const createIndexExport = ({ engine, ...args }) => {
   }
 }
 
+export const sourceNodes = ({ actions: { createTypes } }) => {
+  createTypes(`
+    type LocalSearchIndex implements Node {
+      id: String!
+      engine: String!
+      index: String!
+      store: JSON!
+    }
+  `)
+}
+
+// Run GraphQL query during createPages and save to cache. The result will be
+// used later in the bootstrap process to create the index node.
 export const createPages = async (
-  { graphql, actions: { createNode } },
+  { graphql, cache, actions: { createNode } },
   { name, ref = 'id', store: storeFields, query, normalizer, engine },
 ) => {
   const result = await graphql(query)
@@ -83,14 +89,38 @@ export const createPages = async (
     R.indexBy(R.prop(ref)),
   )(documents)
 
-  R.pipe(
-    createNodeFactory(name),
-    createNode,
-  )({
-    id: name,
-    engine,
-    index,
-    store,
+  await cache.set(`gatsby-plugin-local-search___${name}___index`, index)
+  await cache.set(`gatsby-plugin-local-search___${name}___store`, store)
+
+  return
+}
+
+export const createResolvers = async (
+  { createResolvers, cache },
+  { name, engine },
+) => {
+  createResolvers({
+    Query: {
+      [lowerFirst(generateTypeName(name))]: {
+        type: 'LocalSearchIndex',
+        resolve: async (_parent, _args, context) => {
+          const index = await cache.get(
+            `gatsby-plugin-local-search___${name}___index`,
+          )
+
+          const store = await cache.get(
+            `gatsby-plugin-local-search___${name}___store`,
+          )
+
+          return {
+            id: name,
+            engine,
+            index,
+            store,
+          }
+        },
+      },
+    },
   })
 
   return
