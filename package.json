@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-local-search",
-  "version": "1.0.0-engines.4",
+  "version": "1.0.0-engines.5",
   "description": "Gatsby plugin for providing client-side search for data available in Gatsby's GraphQL layer",
   "scripts": {
     "format": "prettier --write 'src/**/*.js' 'README.md'",
