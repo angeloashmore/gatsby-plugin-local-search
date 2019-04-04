@@ -4,12 +4,12 @@ import FlexSearch from 'flexsearch'
 import * as R from 'ramda'
 import lowerFirst from 'lodash.lowerfirst'
 
-const {
-  createNodeFactory,
-  generateNodeId,
-  generateTypeName,
-} = createNodeHelpers({
-  typePrefix: 'LocalSearch',
+const TYPE_PREFIX = 'LocalSearch'
+const TYPE_INDEX = 'Index'
+const TYPE_STORE = 'Store'
+
+const { generateTypeName, generateNodeId } = createNodeHelpers({
+  typePrefix: TYPE_PREFIX,
 })
 
 // Returns an exported FlexSearch index using the provided documents, fields,
@@ -51,18 +51,6 @@ const createIndexExport = ({ engine, ...args }) => {
   }
 }
 
-// Set the GraphQL type for LocalSearchIndex.
-export const sourceNodes = async ({ actions: { createTypes } }) => {
-  createTypes(`
-    type LocalSearchIndex implements Node {
-      id: ID!
-      engine: String!
-      index: String!
-      store: String!
-    }
-  `)
-}
-
 // Create index and store during createPages and save to cache. The cached
 // values will be used in createResolvers.
 export const createPages = async (
@@ -94,28 +82,43 @@ export const createPages = async (
     R.indexBy(R.prop(ref)),
   )(documents)
 
-  await cache.set(`gatsby-plugin-local-search___${name}___index`, index)
-  await cache.set(`gatsby-plugin-local-search___${name}___store`, store)
+  // Save to cache to use later in GraphQL resolver.
+  await cache.set(generateNodeId(TYPE_INDEX, name), index)
+  await cache.set(generateNodeId(TYPE_STORE, name), store)
 
   return
 }
 
+// Set the GraphQL type for LocalSearchIndex.
+export const sourceNodes = async (
+  { actions: { createTypes }, schema },
+  { name },
+) => {
+  createTypes([
+    schema.buildObjectType({
+      name: generateTypeName(`${TYPE_INDEX} ${name}`),
+      fields: {
+        id: 'ID!',
+        engine: 'String!',
+        index: 'String!',
+        store: 'String!',
+      },
+      interfaces: ['Node'],
+    }),
+  ])
+}
+
 export const createResolvers = async (
-  { createResolvers, cache },
+  { actions: { createTypes }, createResolvers, cache, schema },
   { name, engine },
 ) => {
   createResolvers({
     Query: {
       [lowerFirst(generateTypeName(name))]: {
-        type: 'LocalSearchIndex',
+        type: generateTypeName(`${TYPE_INDEX} ${name}`),
         resolve: async (_parent, _args, context) => {
-          const index = await cache.get(
-            `gatsby-plugin-local-search___${name}___index`,
-          )
-
-          const store = await cache.get(
-            `gatsby-plugin-local-search___${name}___store`,
-          )
+          const index = await cache.get(generateNodeId(TYPE_INDEX, name))
+          const store = await cache.get(generateNodeId(TYPE_STORE, name))
 
           return {
             id: name,
