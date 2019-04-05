@@ -97,7 +97,10 @@ export const createPages = async (
 }
 
 // Set the GraphQL type for LocalSearchIndex.
-export const sourceNodes = ({ actions: { createTypes }, schema }, { name }) => {
+export const onPreBootstrap = (
+  { actions: { createTypes }, schema },
+  { name },
+) => {
   createTypes([
     schema.buildObjectType({
       name: generateTypeName(`${TYPE_INDEX} ${name}`),
