@@ -36,7 +36,7 @@ const createLunrIndexExport = ({ documents, fields, ref }) => {
 
 // Returns an exported index using the provided engine, documents, fields, and
 // ref. Throws if the provided engine is invalid.
-const createIndexExport = ({ engine, ...args }) => {
+const createIndexExport = ({ reporter, name, engine, ...args }) => {
   switch (engine) {
     case 'flexsearch':
       return createFlexSearchIndexExport(args)
@@ -45,28 +45,28 @@ const createIndexExport = ({ engine, ...args }) => {
       return createLunrIndexExport(args)
 
     default:
-      throw new Error(
-        'gatsby-plugin-local-search engine is invalid. Must be one of: flexsearch, lunr.',
+      reporter.error(
+        `The gatsby-plugin-local-search engine option for index "${name}" is invalid. Must be one of: flexsearch, lunr. The index will be null.`,
       )
+
+      return null
   }
 }
 
 // Create index and store during createPages and save to cache. The cached
 // values will be used in createResolvers.
 export const createPages = async (
-  { graphql, cache },
+  { graphql, cache, reporter },
   { name, ref = 'id', store: storeFields, query, normalizer, engine },
 ) => {
   const result = await graphql(query)
   if (result.errors) throw R.head(result.errors)
 
   const documents = await Promise.resolve(normalizer(result))
-  if (R.isEmpty(documents)) {
-    console.log(
-      `gatsby-plugin-local-search returned no documents for query "${name}". Skipping index creation.`,
+  if (R.isEmpty(documents))
+    reporter.warn(
+      `The gatsby-plugin-local-search query for index "${name}" returned no nodes. The index and store will be empty.`,
     )
-    return
-  }
 
   const fields = R.pipe(
     R.head,
@@ -74,7 +74,14 @@ export const createPages = async (
     R.reject(R.equals(ref)),
   )(documents)
 
-  const index = createIndexExport({ engine, documents, fields, ref })
+  const index = createIndexExport({
+    reporter,
+    name,
+    engine,
+    documents,
+    fields,
+    ref,
+  })
 
   // Default to all fields if storeFields is not provided
   const store = R.pipe(
@@ -90,20 +97,16 @@ export const createPages = async (
 }
 
 // Set the GraphQL type for LocalSearchIndex.
-export const sourceNodes = async (
-  { actions: { createTypes }, schema },
-  { name },
-) => {
+export const sourceNodes = ({ actions: { createTypes }, schema }, { name }) => {
   createTypes([
     schema.buildObjectType({
       name: generateTypeName(`${TYPE_INDEX} ${name}`),
       fields: {
-        id: 'ID!',
-        engine: 'String!',
-        index: 'String!',
-        store: 'String!',
+        id: 'ID',
+        engine: 'String',
+        index: 'String',
+        store: 'String',
       },
-      interfaces: ['Node'],
     }),
   ])
 }
