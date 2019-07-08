@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-local-search",
-  "version": "0.1.4",
+  "version": "1.0.0-engines.7",
   "description": "Gatsby plugin for providing client-side search for data available in Gatsby's GraphQL layer",
   "scripts": {
     "format": "prettier --write 'src/**/*.js' 'README.md'",
@@ -33,12 +33,14 @@
     "standard-version": "^5.0.2"
   },
   "dependencies": {
+    "flexsearch": "^0.6.21",
     "gatsby-node-helpers": "^0.3.0",
+    "lodash.lowerfirst": "^4.3.1",
     "lunr": "^2.3.6",
     "ramda": "^0.26.1"
   },
   "peerDependencies": {
-    "gatsby": ">2.0.0-alpha"
+    "gatsby": ">=2.2.0"
   },
   "husky": {
     "hooks": {
