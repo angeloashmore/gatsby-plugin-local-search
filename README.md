@@ -113,7 +113,7 @@ and search functionality up to you.
 
 The following React components/hooks are recommended pairings:
 
-- **FlexSearch**: [`react-flexsearch`][react-flexsearch] (hook)
+- **FlexSearch**: [`react-use-flexsearch`][react-use-flexsearch] (hook)
 - **Lunr**: [`react-lunr`][react-lunr] (hook, component)
 
 [flexsearch]: https://github.com/nextapps-de/flexsearch
