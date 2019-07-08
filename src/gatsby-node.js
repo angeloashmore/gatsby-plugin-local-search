@@ -97,7 +97,7 @@ export const createPages = async (
 }
 
 // Set the GraphQL type for LocalSearchIndex.
-export const onPreBootstrap = (
+export const createSchemaCustomization = (
   { actions: { createTypes }, schema },
   { name },
 ) => {
