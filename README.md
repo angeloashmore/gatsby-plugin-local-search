@@ -43,15 +43,13 @@ module.exports = {
         query: `
           {
             allMarkdownRemark {
-              edges {
-                node {
-                  id
-                  frontmatter {
-                    path
-                    title
-                  }
-                  rawMarkdownBody
+              nodes {
+                id
+                frontmatter {
+                  path
+                  title
                 }
+                rawMarkdownBody
               }
             }
           }
@@ -70,7 +68,7 @@ module.exports = {
         // return an array of items to index in the form of flat objects
         // containing properties to index. This is required.
         normalizer: ({ data }) =>
-          data.allMarkdownRemark.edges.map(({ node }) => ({
+          data.allMarkdownRemark.nodes.map(node => ({
             id: node.id,
             path: node.frontmatter.path,
             title: node.frontmatter.title,
