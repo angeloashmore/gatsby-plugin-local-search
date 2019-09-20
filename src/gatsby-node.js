@@ -14,8 +14,8 @@ const { generateTypeName, generateNodeId } = createNodeHelpers({
 
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
-const createFlexSearchIndexExport = ({ documents, ref }) => {
-  const index = FlexSearch.create()
+const createFlexSearchIndexExport = ({ documents, ref, options }) => {
+  const index = FlexSearch.create(options || {})
 
   documents.forEach(doc => index.add(doc[ref], JSON.stringify(doc)))
 
@@ -57,7 +57,7 @@ const createIndexExport = ({ reporter, name, engine, ...args }) => {
 // values will be used in createResolvers.
 export const createPages = async (
   { graphql, cache, reporter },
-  { name, ref = 'id', store: storeFields, query, normalizer, engine },
+  { name, ref = 'id', store: storeFields, query, normalizer, engine, options },
 ) => {
   const result = await graphql(query)
   if (result.errors) throw R.head(result.errors)
@@ -81,6 +81,7 @@ export const createPages = async (
     documents,
     fields,
     ref,
+    options
   })
 
   // Default to all fields if storeFields is not provided
