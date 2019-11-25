@@ -14,10 +14,10 @@ const { generateTypeName, generateNodeId } = createNodeHelpers({
 
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
-const createFlexSearchIndexExport = ({ documents, ref }) => {
+const createFlexSearchIndexExport = ({ documents, fields, ref }) => {
   const index = FlexSearch.create()
 
-  documents.forEach(doc => index.add(doc[ref], JSON.stringify(doc)))
+  documents.forEach(doc => index.add(doc[ref], JSON.stringify(R.pick(fields, doc))))
 
   return index.export()
 }
@@ -57,7 +57,7 @@ const createIndexExport = ({ reporter, name, engine, ...args }) => {
 // values will be used in createResolvers.
 export const createPages = async (
   { graphql, cache, reporter },
-  { name, ref = 'id', store: storeFields, query, normalizer, engine },
+  { name, ref = 'id', store: storeFields, index: indexFields, query, normalizer, engine },
 ) => {
   const result = await graphql(query)
   if (result.errors) throw R.head(result.errors)
@@ -68,11 +68,9 @@ export const createPages = async (
       `The gatsby-plugin-local-search query for index "${name}" returned no nodes. The index and store will be empty.`,
     )
 
-  const fields = R.pipe(
-    R.head,
-    R.keys,
-    R.reject(R.equals(ref)),
-  )(documents)
+  const fields = R.reject(R.equals(ref),
+    indexFields || R.pipe(R.head, R.keys)(documents)
+  )
 
   const index = createIndexExport({
     reporter,
