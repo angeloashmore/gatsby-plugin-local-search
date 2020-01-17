@@ -23,20 +23,20 @@
   "author": "Angelo Ashmore <angelo.ashmore@walltowall.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
-    "@commitlint/cli": "^7.5.2",
-    "@commitlint/config-conventional": "^7.5.0",
-    "husky": "^1.3.1",
-    "prettier": "^1.16.4",
-    "standard-version": "^5.0.2"
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "husky": "^4.0.10",
+    "prettier": "^1.19.1",
+    "standard-version": "^7.0.1"
   },
   "dependencies": {
-    "flexsearch": "^0.6.21",
+    "flexsearch": "^0.6.32",
     "gatsby-node-helpers": "^0.3.0",
     "lodash.lowerfirst": "^4.3.1",
-    "lunr": "^2.3.6",
+    "lunr": "^2.3.8",
     "ramda": "^0.26.1"
   },
   "peerDependencies": {
