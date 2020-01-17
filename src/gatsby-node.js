@@ -1,7 +1,7 @@
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
-import * as R from 'ramda'
 import lowerFirst from 'lodash.lowerfirst'
+import pick from 'lodash.pick'
 import pascalcase from 'pascalcase'
 
 const TYPE_PREFIX = 'LocalSearch'
@@ -10,13 +10,20 @@ const TYPE_STORE = 'Store'
 
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
-const createFlexSearchIndexExport = ({ documents, ref, engineOptions }) => {
+const createFlexSearchIndexExport = ({
+  documents,
+  fields,
+  ref,
+  engineOptions,
+}) => {
   const index = FlexSearch.create.apply(
     null,
     Array.isArray(engineOptions) ? engineOptions : [engineOptions],
   )
 
-  documents.forEach(doc => index.add(doc[ref], JSON.stringify(doc)))
+  documents.forEach(doc =>
+    index.add(doc[ref], JSON.stringify(pick(doc, fields))),
+  )
 
   return index.export()
 }
@@ -26,8 +33,8 @@ const createFlexSearchIndexExport = ({ documents, ref, engineOptions }) => {
 const createLunrIndexExport = ({ documents, fields, ref }) => {
   const index = lunr(function() {
     this.ref(ref)
-    fields.forEach(x => this.field(x))
-    documents.forEach(x => this.add(x))
+    fields.forEach(field => this.field(field))
+    documents.forEach(doc => this.add(doc))
   })
 
   return JSON.stringify(index)
@@ -59,6 +66,7 @@ export const createPages = async (gatsbyContext, pluginOptions) => {
   const {
     name,
     ref = 'id',
+    index: indexFields,
     store: storeFields,
     query,
     normalizer,
@@ -67,15 +75,16 @@ export const createPages = async (gatsbyContext, pluginOptions) => {
   } = pluginOptions
 
   const result = await graphql(query)
-  if (result.errors) throw R.head(result.errors)
+  if (result.errors) throw result.errors[0]
 
   const documents = await Promise.resolve(normalizer(result))
-  if (R.isEmpty(documents))
+  if (documents.length < 1)
     reporter.warn(
       `The gatsby-plugin-local-search query for index "${name}" returned no nodes. The index and store will be empty.`,
     )
 
-  const fields = R.pipe(R.head, R.keys, R.reject(R.equals(ref)))(documents)
+  // Default set of fields to index.
+  const normalizerFields = Object.keys(documents[0])
 
   const index = createIndexExport({
     reporter,
@@ -83,15 +92,15 @@ export const createPages = async (gatsbyContext, pluginOptions) => {
     engine,
     engineOptions,
     documents,
-    fields,
+    fields: indexFields ?? normalizerFields,
     ref,
   })
 
-  // Default to all fields if storeFields is not provided
-  const store = R.pipe(
-    R.map(R.pick(storeFields || [...fields, ref])),
-    R.indexBy(R.prop(ref)),
-  )(documents)
+  const store = documents.reduce((acc, doc) => {
+    acc[doc[ref]] = storeFields ? pick(doc, storeFields) : doc
+
+    return acc
+  }, {})
 
   // Save to cache to use later in GraphQL resolver.
   await cache.set(createNodeId(`${TYPE_INDEX} ${name}`), index)
