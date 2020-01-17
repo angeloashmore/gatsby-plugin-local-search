@@ -1,21 +1,20 @@
-import createNodeHelpers from 'gatsby-node-helpers'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 import * as R from 'ramda'
 import lowerFirst from 'lodash.lowerfirst'
+import pascalcase from 'pascalcase'
 
 const TYPE_PREFIX = 'LocalSearch'
 const TYPE_INDEX = 'Index'
 const TYPE_STORE = 'Store'
 
-const { generateTypeName, generateNodeId } = createNodeHelpers({
-  typePrefix: TYPE_PREFIX,
-})
-
 // Returns an exported FlexSearch index using the provided documents, fields,
 // and ref.
-const createFlexSearchIndexExport = ({ documents, ref }) => {
-  const index = FlexSearch.create()
+const createFlexSearchIndexExport = ({ documents, ref, engineOptions }) => {
+  const index = FlexSearch.create.apply(
+    null,
+    Array.isArray(engineOptions) ? engineOptions : [engineOptions],
+  )
 
   documents.forEach(doc => index.add(doc[ref], JSON.stringify(doc)))
 
@@ -55,10 +54,18 @@ const createIndexExport = ({ reporter, name, engine, ...args }) => {
 
 // Create index and store during createPages and save to cache. The cached
 // values will be used in createResolvers.
-export const createPages = async (
-  { graphql, cache, reporter },
-  { name, ref = 'id', store: storeFields, query, normalizer, engine },
-) => {
+export const createPages = async (gatsbyContext, pluginOptions) => {
+  const { graphql, cache, reporter, createNodeId } = gatsbyContext
+  const {
+    name,
+    ref = 'id',
+    store: storeFields,
+    query,
+    normalizer,
+    engine,
+    engineOptions,
+  } = pluginOptions
+
   const result = await graphql(query)
   if (result.errors) throw R.head(result.errors)
 
@@ -68,16 +75,13 @@ export const createPages = async (
       `The gatsby-plugin-local-search query for index "${name}" returned no nodes. The index and store will be empty.`,
     )
 
-  const fields = R.pipe(
-    R.head,
-    R.keys,
-    R.reject(R.equals(ref)),
-  )(documents)
+  const fields = R.pipe(R.head, R.keys, R.reject(R.equals(ref)))(documents)
 
   const index = createIndexExport({
     reporter,
     name,
     engine,
+    engineOptions,
     documents,
     fields,
     ref,
@@ -90,20 +94,21 @@ export const createPages = async (
   )(documents)
 
   // Save to cache to use later in GraphQL resolver.
-  await cache.set(generateNodeId(TYPE_INDEX, name), index)
-  await cache.set(generateNodeId(TYPE_STORE, name), store)
+  await cache.set(createNodeId(`${TYPE_INDEX} ${name}`), index)
+  await cache.set(createNodeId(`${TYPE_STORE} ${name}`), store)
 
   return
 }
 
 // Set the GraphQL type for LocalSearchIndex.
-export const createSchemaCustomization = (
-  { actions: { createTypes }, schema },
-  { name },
-) => {
+export const createSchemaCustomization = (gatsbyContext, pluginOptions) => {
+  const { actions, schema } = gatsbyContext
+  const { createTypes } = actions
+  const { name } = pluginOptions
+
   createTypes([
     schema.buildObjectType({
-      name: generateTypeName(`${TYPE_INDEX} ${name}`),
+      name: pascalcase(`${TYPE_PREFIX} ${TYPE_INDEX} ${name}`),
       fields: {
         id: 'ID',
         engine: 'String',
@@ -114,17 +119,17 @@ export const createSchemaCustomization = (
   ])
 }
 
-export const createResolvers = async (
-  { actions: { createTypes }, createResolvers, cache, schema },
-  { name, engine },
-) => {
+export const createResolvers = async (gatsbyContext, pluginOptions) => {
+  const { createResolvers, cache, createNodeId } = gatsbyContext
+  const { name, engine } = pluginOptions
+
   createResolvers({
     Query: {
-      [lowerFirst(generateTypeName(name))]: {
-        type: generateTypeName(`${TYPE_INDEX} ${name}`),
-        resolve: async (_parent, _args, context) => {
-          const index = await cache.get(generateNodeId(TYPE_INDEX, name))
-          const store = await cache.get(generateNodeId(TYPE_STORE, name))
+      [lowerFirst(pascalcase(`${TYPE_PREFIX} ${name}`))]: {
+        type: pascalcase(`${TYPE_PREFIX} ${TYPE_INDEX} ${name}`),
+        resolve: async () => {
+          const index = await cache.get(createNodeId(`${TYPE_INDEX} ${name}`))
+          const store = await cache.get(createNodeId(`${TYPE_STORE} ${name}`))
 
           return {
             id: name,
