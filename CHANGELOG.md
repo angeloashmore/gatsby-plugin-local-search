@@ -1,6 +1,19 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.1.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.0.0...v1.1.0) (2020-01-17)
+
+
+### Features
+
+* use `index` option to filter indexed fields ([aed3fc3](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/aed3fc3ad61d30c899b5cca7e5d4d0df7fd1864a))
+
+
+### Bug Fixes
+
+* update deep dependencies ([cfc70e1](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/cfc70e10fb3e4455e0e6c18390b24f5188733b1e))
+* update dependencies ([84e5141](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/84e5141aa7fa74f5740567e30706e38a6342123e))
 
 # [1.0.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v0.1.4...v1.0.0) (2019-07-08)
 
