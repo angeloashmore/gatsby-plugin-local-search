@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createPages creates FlexSearch index 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "engine": "flexsearch",
+        "id": "createNodeId",
+        "index": "[[{\\"i\\":[\\"id1\\",\\"id2\\"],\\"id\\":[\\"id1\\",\\"id2\\"]},{\\"id1\\":[\\"id1\\"],\\"f\\":[\\"id1\\",\\"id2\\"],\\"fo\\":[\\"id1\\",\\"id2\\"],\\"foo\\":[\\"id1\\",\\"id2\\"],\\"id2\\":[\\"id2\\"]},{\\"b\\":[\\"id1\\",\\"id2\\"],\\"ba\\":[\\"id1\\",\\"id2\\"],\\"bar\\":[\\"id1\\"],\\"baz\\":[\\"id2\\"]},{},{},{},{},{},{}],{},[\\"@id1\\",\\"@id2\\"]]",
+        "internal": Object {
+          "contentDigest": "createContentDigest",
+          "type": "LocalSearchName",
+        },
+        "store": Object {
+          "id1": Object {
+            "foo": "bar",
+            "id": "id1",
+          },
+          "id2": Object {
+            "foo": "baz",
+            "id": "id2",
+          },
+        },
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages creates Lunr index 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "engine": "lunr",
+        "id": "createNodeId",
+        "index": "{\\"version\\":\\"2.3.8\\",\\"fields\\":[\\"id\\",\\"foo\\"],\\"fieldVectors\\":[[\\"id/id1\\",[0,0.693]],[\\"foo/id1\\",[1,0.693]],[\\"id/id2\\",[2,0.693]],[\\"foo/id2\\",[3,0.693]]],\\"invertedIndex\\":[[\\"bar\\",{\\"_index\\":1,\\"id\\":{},\\"foo\\":{\\"id1\\":{}}}],[\\"baz\\",{\\"_index\\":3,\\"id\\":{},\\"foo\\":{\\"id2\\":{}}}],[\\"id1\\",{\\"_index\\":0,\\"id\\":{\\"id1\\":{}},\\"foo\\":{}}],[\\"id2\\",{\\"_index\\":2,\\"id\\":{\\"id2\\":{}},\\"foo\\":{}}]],\\"pipeline\\":[\\"stemmer\\"]}",
+        "internal": Object {
+          "contentDigest": "createContentDigest",
+          "type": "LocalSearchName",
+        },
+        "store": Object {
+          "id1": Object {
+            "foo": "bar",
+            "id": "id1",
+          },
+          "id2": Object {
+            "foo": "baz",
+            "id": "id2",
+          },
+        },
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages creates types 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "
+        type LocalSearchName extends Node @dontInfer {
+          engine: String!
+          index: String!
+          store: JSON!
+        }
+      ",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;

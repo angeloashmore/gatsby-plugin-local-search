@@ -1,56 +1,50 @@
 {
-  "name": "gatsby-plugin-local-search",
-  "version": "1.1.0",
-  "description": "Gatsby plugin for providing client-side search for data available in Gatsby's GraphQL layer",
-  "scripts": {
-    "format": "prettier --write 'src/**/*.js' 'README.md'",
-    "build": "babel src --out-dir dist",
-    "prepare": "npm run build",
-    "release": "standard-version"
-  },
-  "homepage": "https://github.com/angeloashmore/gatsby-plugin-local-search",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/angeloashmore/gatsby-plugin-local-search.git"
-  },
-  "keywords": [
-    "gatsby",
-    "gatsby-plugin",
-    "lunr",
-    "search"
-  ],
-  "author": "Angelo Ashmore <angelo.ashmore@walltowall.com>",
+  "version": "0.1.0",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.8.0",
-    "husky": "^4.0.10",
-    "prettier": "^1.19.1",
-    "standard-version": "^7.0.1"
-  },
-  "dependencies": {
-    "flexsearch": "^0.6.32",
-    "lodash.lowerfirst": "^4.3.1",
-    "lodash.pick": "^4.4.0",
-    "lunr": "^2.3.8",
-    "pascalcase": "^1.0.0"
-  },
-  "peerDependencies": {
-    "gatsby": ">=2.2.0"
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch -i ./src/gatsby-node.ts",
+    "build": "tsdx build -i ./src/gatsby-node.ts",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build"
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "pre-commit": "tsdx lint"
     }
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "proseWrap": "always",
+    "printWidth": 80
+  },
+  "name": "gatsby-plugin-local-search",
+  "author": "Angelo Ashmore",
+  "module": "dist/gatsby-plugin-local-search.esm.js",
+  "devDependencies": {
+    "@types/jest": "^24.9.0",
+    "@types/lodash": "^4.14.149",
+    "@types/lunr": "^2.3.2",
+    "gatsby": "^2.18.25",
+    "husky": "^4.0.10",
+    "prettier": "^1.19.1",
+    "tsdx": "^0.12.3",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "flexsearch": "^0.6.32",
+    "lodash": "^4.17.15",
+    "lodash.lowerfirst": "^4.3.1",
+    "lodash.pick": "^4.4.0",
+    "lunr": "^2.3.8",
+    "pascal-case": "^3.1.1"
   }
 }
