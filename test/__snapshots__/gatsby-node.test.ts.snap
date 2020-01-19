@@ -1,6 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createPages creates FlexSearch index 1`] = `
+exports[`createPages creates types 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "
+        type LocalSearchName extends Node @dontInfer {
+          engine: String!
+          index: String!
+          store: JSON!
+        }
+      ",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages with flexsearch engine creates index 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
@@ -34,13 +56,13 @@ exports[`createPages creates FlexSearch index 1`] = `
 }
 `;
 
-exports[`createPages creates FlexSearch index 2`] = `
+exports[`createPages with flexsearch engine creates index 2`] = `
 Array [
   "id2",
 ]
 `;
 
-exports[`createPages creates Lunr index 1`] = `
+exports[`createPages with lunr engine creates index 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
@@ -74,7 +96,7 @@ exports[`createPages creates Lunr index 1`] = `
 }
 `;
 
-exports[`createPages creates Lunr index 2`] = `
+exports[`createPages with lunr engine creates index 2`] = `
 Array [
   Object {
     "matchData": Object {
@@ -88,26 +110,4 @@ Array [
     "score": 0.693,
   },
 ]
-`;
-
-exports[`createPages creates types 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      "
-        type LocalSearchName extends Node @dontInfer {
-          engine: String!
-          index: String!
-          store: JSON!
-        }
-      ",
-    ],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
 `;

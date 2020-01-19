@@ -149,44 +149,64 @@ beforeAll(() => {
 describe('createPages', () => {
   beforeEach(() => jest.clearAllMocks())
 
-  test('creates FlexSearch index', async () => {
-    await new Promise(res =>
-      createPages!(mockGatsbyContext, pluginOptions, res),
-    )
-
-    const createNode = mockGatsbyContext.actions.createNode as jest.Mock
-    const node = createNode.mock.calls[0][0]
-    const exportedIndex = node.index
-    const index = FlexSearch.create()
-    index.import(exportedIndex)
-
-    expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
-    expect(index.search('needle')).toMatchSnapshot()
-  })
-
-  test('creates Lunr index', async () => {
-    await new Promise(res =>
-      createPages!(
-        mockGatsbyContext,
-        { ...pluginOptions, engine: Engine.Lunr },
-        res,
-      ),
-    )
-
-    const createNode = mockGatsbyContext.actions.createNode as jest.Mock
-    const node = createNode.mock.calls[0][0]
-    const exportedIndex = node.index
-    const index = lunr.Index.load(JSON.parse(exportedIndex))
-
-    expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
-    expect(index.search('needle')).toMatchSnapshot()
-  })
-
   test('creates types', async () => {
     await new Promise(res =>
       createPages!(mockGatsbyContext, pluginOptions, res),
     )
 
     expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
+  })
+
+  describe('with flexsearch engine', () => {
+    test('creates index', async () => {
+      await new Promise(res =>
+        createPages!(mockGatsbyContext, pluginOptions, res),
+      )
+
+      const createNode = mockGatsbyContext.actions.createNode as jest.Mock
+      const node = createNode.mock.calls[0][0]
+      const exportedIndex = node.index
+      const index = FlexSearch.create()
+      index.import(exportedIndex)
+
+      expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
+      expect(index.search('needle')).toMatchSnapshot()
+    })
+
+    test('passes engine options', async () => {
+      const spy = jest.spyOn(FlexSearch, 'create')
+      const engineOptions = { foo: 'bar' }
+
+      await new Promise(res =>
+        createPages!(
+          mockGatsbyContext,
+          { ...pluginOptions, engineOptions },
+          res,
+        ),
+      )
+
+      expect(spy).toHaveBeenCalledWith(engineOptions)
+      spy.mockRestore()
+    })
+  })
+
+  describe('with lunr engine', () => {
+    test('creates index', async () => {
+      await new Promise(res =>
+        createPages!(
+          mockGatsbyContext,
+          { ...pluginOptions, engine: Engine.Lunr },
+          res,
+        ),
+      )
+
+      const createNode = mockGatsbyContext.actions.createNode as jest.Mock
+      const node = createNode.mock.calls[0][0]
+      const exportedIndex = node.index
+      const index = lunr.Index.load(JSON.parse(exportedIndex))
+
+      expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
+      expect(index.search('needle')).toMatchSnapshot()
+    })
   })
 })
