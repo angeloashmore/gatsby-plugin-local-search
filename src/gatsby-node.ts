@@ -19,8 +19,6 @@ export enum Engine {
   Lunr = 'lunr',
 }
 
-type EngineOptions = FlexSearchCreateOptions | object
-
 interface NormalizerInput {
   errors?: any
   data?: unknown
@@ -28,17 +26,17 @@ interface NormalizerInput {
 
 export interface PluginOptions extends GatsbyPluginOptions {
   name: string
+  engine: Engine
+  engineOptions?: FlexSearchCreateOptions
   ref?: string
   index?: string[]
   store?: string[]
   query: string
   normalizer: (input: NormalizerInput) => IndexableDocument[]
-  engine: Engine
-  engineOptions?: EngineOptions
 }
 
 interface IndexableDocument {
-  [key: string]: string | number | object | null | undefined
+  [key: string]: unknown
 }
 
 interface Store {
