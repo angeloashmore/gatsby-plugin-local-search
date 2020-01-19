@@ -34,6 +34,7 @@ exports[`createPages with flexsearch engine creates index 1`] = `
           "contentDigest": "createContentDigest",
           "type": "LocalSearchName",
         },
+        "name": "name",
         "store": Object {
           "id1": Object {
             "foo": "bar",
@@ -74,6 +75,7 @@ exports[`createPages with lunr engine creates index 1`] = `
           "contentDigest": "createContentDigest",
           "type": "LocalSearchName",
         },
+        "name": "name",
         "store": Object {
           "id1": Object {
             "foo": "bar",

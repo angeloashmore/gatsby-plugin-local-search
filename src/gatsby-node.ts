@@ -50,6 +50,7 @@ enum NodeType {
 }
 
 interface LocalSearchNodeInput extends NodeInput {
+  name: string
   engine: Engine
   index: string
   store: object
@@ -170,6 +171,7 @@ export const createPages: GatsbyNode['createPages'] = (
 
       const node: LocalSearchNodeInput = {
         id: createNodeId(name),
+        name,
         engine,
         index,
         store,
