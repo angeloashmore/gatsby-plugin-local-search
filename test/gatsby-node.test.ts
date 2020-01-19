@@ -1,4 +1,6 @@
 import { CreatePagesArgs } from 'gatsby'
+import lunr from 'lunr'
+import FlexSearch from 'flexsearch'
 
 import { createPages } from '../src/gatsby-node'
 import { PluginOptions, Engine } from '../src/gatsby-node'
@@ -102,9 +104,11 @@ const mockGatsbyContext: CreatePagesArgs & {
   graphql: jest.fn(),
 }
 
-interface QueryData {
-  allNode: {
-    edges: TestNode[]
+interface QueryResult {
+  data: {
+    allNode: {
+      edges: TestNode[]
+    }
   }
 }
 
@@ -113,29 +117,34 @@ interface TestNode {
   foo: string
 }
 
+const mockQueryResult: QueryResult = {
+  data: {
+    allNode: {
+      edges: [
+        { id: 'id1', foo: 'bar' },
+        { id: 'id2', foo: 'needle' },
+      ],
+    },
+  },
+}
+
 const pluginOptions: PluginOptions = {
   name: 'name',
   engine: Engine.FlexSearch,
   query: 'query',
   normalizer: ({ data }) =>
-    (data as QueryData).allNode.edges.map(node => ({
+    (data as QueryResult['data']).allNode.edges.map(node => ({
       id: node.id,
       foo: node.foo,
     })),
   plugins: [],
 }
-;(mockGatsbyContext.graphql as jest.Mock).mockReturnValue(
-  Promise.resolve({
-    data: {
-      allNode: {
-        edges: [
-          { id: 'id1', foo: 'bar' },
-          { id: 'id2', foo: 'baz' },
-        ],
-      },
-    },
-  }),
-)
+
+beforeAll(() => {
+  ;(mockGatsbyContext.graphql as jest.Mock).mockReturnValue(
+    Promise.resolve(mockQueryResult),
+  )
+})
 
 describe('createPages', () => {
   beforeEach(() => jest.clearAllMocks())
@@ -145,7 +154,14 @@ describe('createPages', () => {
       createPages!(mockGatsbyContext, pluginOptions, res),
     )
 
+    const createNode = mockGatsbyContext.actions.createNode as jest.Mock
+    const node = createNode.mock.calls[0][0]
+    const exportedIndex = node.index
+    const index = FlexSearch.create()
+    index.import(exportedIndex)
+
     expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
+    expect(index.search('needle')).toMatchSnapshot()
   })
 
   test('creates Lunr index', async () => {
@@ -157,7 +173,13 @@ describe('createPages', () => {
       ),
     )
 
+    const createNode = mockGatsbyContext.actions.createNode as jest.Mock
+    const node = createNode.mock.calls[0][0]
+    const exportedIndex = node.index
+    const index = lunr.Index.load(JSON.parse(exportedIndex))
+
     expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
+    expect(index.search('needle')).toMatchSnapshot()
   })
 
   test('creates types', async () => {
