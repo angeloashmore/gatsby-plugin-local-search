@@ -113,7 +113,7 @@ interface QueryResult {
 }
 
 interface TestNode {
-  id: string
+  id?: string
   foo: string
 }
 
@@ -123,6 +123,8 @@ const mockQueryResult: QueryResult = {
       edges: [
         { id: 'id1', foo: 'bar' },
         { id: 'id2', foo: 'needle' },
+        // Without valid ref field.
+        { id: undefined, foo: 'baz' },
       ],
     },
   },

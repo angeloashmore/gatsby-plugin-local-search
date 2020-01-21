@@ -157,11 +157,20 @@ export const createPages: GatsbyNode['createPages'] = (
           `The query for index "${name}" returned no nodes. The index and store will be empty.`,
         )
 
-      const index = createIndexExport(documents, pluginOptions, gatsbyContext)
+      const filteredDocuments = documents.filter(
+        doc => doc[ref] !== undefined && doc[ref] !== null,
+      )
+
+      const index = createIndexExport(
+        filteredDocuments,
+        pluginOptions,
+        gatsbyContext,
+      )
       if (!index) return
 
-      const store = documents.reduce((acc, doc) => {
-        acc[doc[ref] as string] = storeFields ? pick(doc, storeFields) : doc
+      const store = filteredDocuments.reduce((acc, doc) => {
+        acc[String(doc[ref])] = storeFields ? pick(doc, storeFields) : doc
+
         return acc
       }, {} as Store)
 
