@@ -84,7 +84,7 @@ export const createPages = async (gatsbyContext, pluginOptions) => {
     )
 
   // Default set of fields to index.
-  const normalizerFields = Object.keys(documents[0])
+  const normalizerFields = documents.length > 0 ? Object.keys(documents[0]) : []
 
   const index = createIndexExport({
     reporter,
