@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.1.0...v1.1.1) (2020-02-28)
+
+
+### Features
+
+* safely set default normalizer fields ([f8f63d2](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/f8f63d2f3bdcdbc8b233eed3a5846f9754836d78))
+
 ## [1.1.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.0.0...v1.1.0) (2020-01-17)
 
 
