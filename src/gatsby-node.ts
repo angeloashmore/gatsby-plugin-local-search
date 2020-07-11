@@ -3,10 +3,10 @@ import FlexSearch from 'flexsearch'
 import {
   GatsbyNode,
   CreatePagesArgs,
-  PluginCallback,
   CreateSchemaCustomizationArgs,
+  CreateResolversArgs,
 } from 'gatsby'
-import { pick } from 'lodash'
+import { pick, lowerFirst } from 'lodash'
 import { pascalCase } from 'pascal-case'
 
 import {
@@ -15,6 +15,7 @@ import {
   PluginOptions,
   Store,
   LocalSearchNodeInput,
+  PartialContext,
 } from './types'
 
 const DEFAULT_REF = 'id'
@@ -81,11 +82,10 @@ const createIndexExport = (
 
 // Callback style is necessary since createPages cannot be async or return a
 // Promise. At least, that's what GatsbyNode['createNodes'] says.
-export const createPages: NonNullable<GatsbyNode['createPages']> = (
+export const createPages = async (
   gatsbyContext: CreatePagesArgs,
   pluginOptions: PluginOptions,
-  cb: PluginCallback,
-) => {
+): Promise<void> => {
   const {
     actions,
     graphql,
@@ -103,60 +103,56 @@ export const createPages: NonNullable<GatsbyNode['createPages']> = (
     normalizer,
   } = pluginOptions
 
-  graphql(query)
-    .then((result) => {
-      if (result.errors) {
-        reporter.error(
-          'The provided GraphQL query contains errors. The index will not be created.',
-          result.errors[0],
-        )
-        return
-      }
+  const result = await graphql(query)
 
-      return Promise.resolve(normalizer(result))
-    })
-    .then((documents) => {
-      if (!documents) documents = []
+  if (result.errors) {
+    reporter.error(
+      'The provided GraphQL query contains errors. The index will not be created.',
+      result.errors[0],
+    )
+    return
+  }
 
-      if (documents.length < 1)
-        reporter.warn(
-          `The query for index "${name}" returned no nodes. The index and store will be empty.`,
-        )
+  const documents = (await Promise.resolve(normalizer(result))) || []
 
-      const filteredDocuments = documents.filter(
-        (doc) => doc[ref] !== undefined && doc[ref] !== null,
-      )
+  if (documents.length < 1)
+    reporter.warn(
+      `The query for index "${name}" returned no nodes. The index and store will be empty.`,
+    )
 
-      const index = createIndexExport(
-        filteredDocuments,
-        pluginOptions,
-        gatsbyContext,
-      )
-      if (!index) return
+  const filteredDocuments = documents.filter(
+    (doc) => doc[ref] !== undefined && doc[ref] !== null,
+  )
 
-      const store = filteredDocuments.reduce((acc, doc) => {
-        acc[String(doc[ref])] = storeFields ? pick(doc, storeFields) : doc
+  const index = createIndexExport(
+    filteredDocuments,
+    pluginOptions,
+    gatsbyContext,
+  )
+  if (!index) return
 
-        return acc
-      }, {} as Store)
+  const store = filteredDocuments.reduce((acc, doc) => {
+    acc[String(doc[ref])] = storeFields ? pick(doc, storeFields) : doc
 
-      const nodeType = pascalCase(`${NodeType.LocalSearch} ${name}`)
+    return acc
+  }, {} as Store)
 
-      const node: LocalSearchNodeInput = {
-        id: createNodeId(name),
-        name,
-        engine,
-        index,
-        store,
-        internal: {
-          type: nodeType,
-          contentDigest: createContentDigest({ index, store }),
-        },
-      }
+  const nodeType = pascalCase(`${NodeType.LocalSearch} ${name}`)
+  const nodeId = createNodeId(name)
 
-      createNode(node)
-    })
-    .finally(() => cb(null))
+  const node: LocalSearchNodeInput = {
+    id: nodeId,
+    name,
+    engine,
+    index,
+    store,
+    internal: {
+      type: nodeType,
+      contentDigest: createContentDigest({ index, store }),
+    },
+  }
+
+  createNode(node)
 }
 
 export const createSchemaCustomization: NonNullable<
@@ -175,10 +171,35 @@ export const createSchemaCustomization: NonNullable<
     schema.buildObjectType({
       name: nodeType,
       fields: {
+        id: 'ID!',
+        name: 'String!',
         engine: 'String!',
         index: 'String!',
         store: 'JSON!',
       },
     }),
   ])
+}
+
+export const createResolvers: NonNullable<
+  GatsbyNode['createResolvers']
+> = async (
+  gatsbyContext: CreateResolversArgs,
+  pluginOptions: PluginOptions,
+) => {
+  const { createResolvers, createNodeId } = gatsbyContext
+  const { name } = pluginOptions
+
+  const nodeType = pascalCase(`${NodeType.LocalSearch} ${name}`)
+  const nodeId = createNodeId(name)
+
+  createResolvers({
+    Query: {
+      [lowerFirst(nodeType)]: {
+        type: nodeType,
+        resolve: (_source: unknown, _args: unknown, context: PartialContext) =>
+          context.nodeModel.getNodeById({ id: nodeId }),
+      },
+    },
+  })
 }

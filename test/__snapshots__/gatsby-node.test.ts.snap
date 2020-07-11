@@ -92,6 +92,29 @@ Array [
 ]
 `;
 
+exports[`createResolvers creates resolvers 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "Query": Object {
+          "localSearchName": Object {
+            "resolve": [Function],
+            "type": "LocalSearchName",
+          },
+        },
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`createSchemaCustomization creates types 1`] = `
 [MockFunction] {
   "calls": Array [
@@ -101,7 +124,9 @@ exports[`createSchemaCustomization creates types 1`] = `
           "config": Object {
             "fields": Object {
               "engine": "String!",
+              "id": "ID!",
               "index": "String!",
+              "name": "String!",
               "store": "JSON!",
             },
             "name": "LocalSearchName",

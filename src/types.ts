@@ -1,5 +1,11 @@
-import { PluginOptions as GatsbyPluginOptions, NodeInput } from 'gatsby'
+import { PluginOptions as GatsbyPluginOptions, NodeInput, Node } from 'gatsby'
 import { CreateOptions as FlexSearchCreateOptions } from 'flexsearch'
+
+export interface PartialContext {
+  nodeModel: {
+    getNodeById: (input: { id: string; type?: string }) => Node
+  }
+}
 
 export type IndexableDocument = Record<string, unknown>
 

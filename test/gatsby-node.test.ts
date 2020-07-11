@@ -1,137 +1,22 @@
-import { CreatePagesArgs, CreateSchemaCustomizationArgs } from 'gatsby'
+import {
+  CreatePagesArgs,
+  CreateSchemaCustomizationArgs,
+  CreateResolversArgs,
+} from 'gatsby'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 
-import { createPages, createSchemaCustomization } from '../src/gatsby-node'
-
-const mockActions = {
-  deletePage: jest.fn(),
-  createPage: jest.fn(),
-  deleteNode: jest.fn(),
-  deleteNodes: jest.fn(),
-  createNode: jest.fn(),
-  touchNode: jest.fn(),
-  createNodeField: jest.fn(),
-  createParentChildLink: jest.fn(),
-  setWebpackConfig: jest.fn(),
-  replaceWebpackConfig: jest.fn(),
-  setBabelOptions: jest.fn(),
-  setBabelPlugin: jest.fn(),
-  setBabelPreset: jest.fn(),
-  createJob: jest.fn(),
-  createJobV2: jest.fn(),
-  setJob: jest.fn(),
-  endJob: jest.fn(),
-  setPluginStatus: jest.fn(),
-  createRedirect: jest.fn(),
-  addThirdPartySchema: jest.fn(),
-  createTypes: jest.fn(),
-  createFieldExtension: jest.fn(),
-}
-
-const mockGatsbyContext: CreatePagesArgs & {
-  traceId: 'initial-createPages'
-} = {
-  pathPrefix: 'pathPrefix',
-  boundActionCreators: mockActions,
-  actions: mockActions,
-  loadNodeContent: jest.fn(),
-  store: {
-    dispatch: jest.fn(),
-    subscribe: jest.fn(),
-    getState: jest.fn(),
-    replaceReducer: jest.fn(),
-  },
-  emitter: {
-    addListener: jest.fn(),
-    on: jest.fn(),
-    once: jest.fn(),
-    prependListener: jest.fn(),
-    prependOnceListener: jest.fn(),
-    removeListener: jest.fn(),
-    off: jest.fn(),
-    removeAllListeners: jest.fn(),
-    setMaxListeners: jest.fn(),
-    getMaxListeners: jest.fn(),
-    listeners: jest.fn(),
-    rawListeners: jest.fn(),
-    emit: jest.fn(),
-    eventNames: jest.fn(),
-    listenerCount: jest.fn(),
-  },
-  getNodes: jest.fn(),
-  getNode: jest.fn(),
-  getNodesByType: jest.fn(),
-  hasNodeChanged: jest.fn(),
-  reporter: {
-    stripIndent: jest.fn(),
-    // @ts-ignore
-    format: jest.fn(),
-    setVerbose: jest.fn(),
-    setNoColor: jest.fn(),
-    // @ts-ignore
-    panic: jest.fn().mockImplementation((msg: string | Error, err?: Error) => {
-      throw err ?? msg
-    }),
-    panicOnBuild: jest
-      .fn()
-      .mockImplementation((msg: string | Error, err?: Error) => {
-        throw err ?? msg
-      }),
-    error: jest.fn(),
-    uptime: jest.fn(),
-    success: jest.fn(),
-    verbose: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    log: jest.fn(),
-    activityTimer: jest.fn().mockReturnValue({
-      start: jest.fn(),
-      end: jest.fn(),
-    }),
-    createProgress: jest.fn(),
-  },
-  getNodeAndSavePathDependency: jest.fn(),
-  cache: {
-    set: jest.fn(),
-    get: jest.fn(),
-  },
-  createNodeId: jest.fn().mockReturnValue('createNodeId'),
-  createContentDigest: jest.fn().mockReturnValue('createContentDigest'),
-  tracing: {
-    tracer: {},
-    parentSpan: {},
-    startSpan: jest.fn(),
-  },
-  parentSpan: {},
-  schema: {
-    buildObjectType: jest
-      .fn()
-      .mockImplementation((config) => ({ kind: 'OBJECT', config })),
-    buildUnionType: jest.fn().mockImplementation((config) => ({
-      kind: 'UNION',
-      config,
-    })),
-    buildInterfaceType: jest
-      .fn()
-      .mockImplementation((config) => ({ kind: 'INTERFACE', config })),
-    buildInputObjectType: jest
-      .fn()
-      .mockImplementation((config) => ({ kind: 'INPUT', config })),
-    buildEnumType: jest
-      .fn()
-      .mockImplementation((config) => ({ kind: 'ENUM', config })),
-    buildScalarType: jest
-      .fn()
-      .mockImplementation((config) => ({ kind: 'SCALAR', config })),
-  },
-  graphql: jest.fn(),
-}
+import {
+  createPages,
+  createSchemaCustomization,
+  createResolvers,
+} from '../src/gatsby-node'
+import { PluginOptions } from '../src/types'
 
 const mockQueryResult = {
   data: {
     allNode: {
-      edges: [
+      nodes: [
         { id: 'id1', foo: 'bar' },
         { id: 'id2', foo: 'needle' },
         // Without valid ref field.
@@ -141,32 +26,36 @@ const mockQueryResult = {
   },
 } as const
 
-const pluginOptions = {
+const pluginOptions: PluginOptions = {
   name: 'name',
   engine: 'flexsearch',
   query: 'query',
-  normalizer: ({ data }: typeof mockQueryResult) =>
-    data.allNode.edges.map((node) => ({
+  normalizer: (input) =>
+    (input as typeof mockQueryResult).data.allNode.nodes.map((node) => ({
       id: node.id,
       foo: node.foo,
     })),
-  plugins: [],
+  plugins: [] as unknown[],
 }
 
-beforeAll(() => {
-  ;(mockGatsbyContext.graphql as jest.Mock).mockReturnValue(
-    Promise.resolve(mockQueryResult),
-  )
-})
+beforeEach(() => jest.clearAllMocks())
 
 describe('createPages', () => {
-  beforeEach(() => jest.clearAllMocks())
+  const mockGatsbyContext: CreatePagesArgs & {
+    traceId: 'initial-createPages'
+  } = {
+    // @ts-expect-error Partial actions
+    actions: { createNode: jest.fn() },
+    // @ts-expect-error Partial reporter
+    reporter: { warn: jest.fn(), error: jest.fn() },
+    createNodeId: jest.fn().mockReturnValue('createNodeId'),
+    createContentDigest: jest.fn().mockReturnValue('createContentDigest'),
+    graphql: jest.fn().mockReturnValue(Promise.resolve(mockQueryResult)),
+  }
 
   describe('with flexsearch engine', () => {
     test('creates index', async () => {
-      await new Promise((res) =>
-        createPages(mockGatsbyContext, pluginOptions, res),
-      )
+      await createPages(mockGatsbyContext, pluginOptions)
 
       const createNode = mockGatsbyContext.actions.createNode as jest.Mock
       const node = createNode.mock.calls[0][0]
@@ -180,15 +69,9 @@ describe('createPages', () => {
 
     test('passes engine options', async () => {
       const spy = jest.spyOn(FlexSearch, 'create')
-      const engineOptions = { foo: 'bar' }
+      const engineOptions = { rtl: true }
 
-      await new Promise((res) =>
-        createPages(
-          mockGatsbyContext,
-          { ...pluginOptions, engineOptions },
-          res,
-        ),
-      )
+      await createPages(mockGatsbyContext, { ...pluginOptions, engineOptions })
 
       expect(spy).toHaveBeenCalledWith(engineOptions)
       spy.mockRestore()
@@ -197,13 +80,7 @@ describe('createPages', () => {
 
   describe('with lunr engine', () => {
     test('creates index', async () => {
-      await new Promise((res) =>
-        createPages(
-          mockGatsbyContext,
-          { ...pluginOptions, engine: 'lunr' },
-          res,
-        ),
-      )
+      await createPages(mockGatsbyContext, { ...pluginOptions, engine: 'lunr' })
 
       const createNode = mockGatsbyContext.actions.createNode as jest.Mock
       const node = createNode.mock.calls[0][0]
@@ -217,20 +94,34 @@ describe('createPages', () => {
 })
 
 describe('createSchemaCustomization', () => {
-  test('creates types', async () => {
-    const mockGatsbyContext: CreateSchemaCustomizationArgs = {
-      // @ts-expect-error Partial actions object
-      actions: { createTypes: jest.fn() },
-      // @ts-expect-error Partial schema object
-      schema: {
-        buildObjectType: jest
-          .fn()
-          .mockImplementation((config) => ({ kind: 'OBJECT', config })),
-      },
-    }
+  const mockGatsbyContext: CreateSchemaCustomizationArgs = {
+    // @ts-expect-error Partial actions
+    actions: { createTypes: jest.fn() },
+    // @ts-expect-error Partial schema
+    schema: {
+      buildObjectType: jest
+        .fn()
+        .mockImplementation((config) => ({ kind: 'OBJECT', config })),
+    },
+  }
 
+  test('creates types', async () => {
     await createSchemaCustomization(mockGatsbyContext, pluginOptions)
 
     expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
+  })
+})
+
+describe('createResolvers', () => {
+  // @ts-expect-error Partial createResolvers context
+  const mockGatsbyContext: CreateResolversArgs = {
+    createResolvers: jest.fn(),
+    createNodeId: jest.fn().mockReturnValue('createNodeId'),
+  }
+
+  test('creates resolvers', async () => {
+    await createResolvers(mockGatsbyContext, pluginOptions)
+
+    expect(mockGatsbyContext.createResolvers).toMatchSnapshot()
   })
 })
