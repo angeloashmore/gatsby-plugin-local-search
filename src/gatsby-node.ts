@@ -75,7 +75,8 @@ const createLunrIndexExport = (
 ): string => {
   const { ref = DEFAULT_REF, index: indexFields } = pluginOptions
 
-  const fields = indexFields ?? Object.keys(documents[0])
+  const fields =
+    indexFields ?? documents.length > 0 ? Object.keys(documents[0]) : []
 
   const index = lunr(function () {
     this.ref(ref)
