@@ -1,33 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createPages creates types 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      Array [
-        Object {
-          "config": Object {
-            "fields": Object {
-              "engine": "String!",
-              "index": "String!",
-              "store": "JSON!",
-            },
-            "name": "LocalSearchName",
-          },
-          "kind": "OBJECT",
-        },
-      ],
-    ],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
-`;
-
 exports[`createPages with flexsearch engine creates index 1`] = `
 [MockFunction] {
   "calls": Array [
@@ -118,4 +90,32 @@ Array [
     "score": 0.693,
   },
 ]
+`;
+
+exports[`sourceNodes creates types 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Array [
+        Object {
+          "config": Object {
+            "fields": Object {
+              "engine": "String!",
+              "index": "String!",
+              "store": "JSON!",
+            },
+            "name": "LocalSearchName",
+          },
+          "kind": "OBJECT",
+        },
+      ],
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
 `;

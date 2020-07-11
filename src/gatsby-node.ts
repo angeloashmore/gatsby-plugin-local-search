@@ -1,25 +1,23 @@
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
-import { GatsbyNode, CreatePagesArgs, PluginCallback, NodeInput } from 'gatsby'
+import {
+  GatsbyNode,
+  CreatePagesArgs,
+  PluginCallback,
+  SourceNodesArgs,
+} from 'gatsby'
 import { pick } from 'lodash'
 import { pascalCase } from 'pascal-case'
 
 import {
   IndexableDocument,
-  Engine,
   NodeType,
   PluginOptions,
   Store,
+  LocalSearchNodeInput,
 } from './types'
 
 const DEFAULT_REF = 'id'
-
-interface LocalSearchNodeInput extends NodeInput {
-  name: string
-  engine: Engine
-  index: string
-  store: Store
-}
 
 const createFlexSearchIndexExport = (
   documents: IndexableDocument[],
@@ -94,9 +92,8 @@ export const createPages: NonNullable<GatsbyNode['createPages']> = (
     reporter,
     createNodeId,
     createContentDigest,
-    schema,
   } = gatsbyContext
-  const { createNode, createTypes } = actions
+  const { createNode } = actions
   const {
     name,
     engine,
@@ -158,17 +155,28 @@ export const createPages: NonNullable<GatsbyNode['createPages']> = (
       }
 
       createNode(node)
-
-      createTypes([
-        schema.buildObjectType({
-          name: nodeType,
-          fields: {
-            engine: 'String!',
-            index: 'String!',
-            store: 'JSON!',
-          },
-        }),
-      ])
     })
     .finally(() => cb(null))
+}
+
+export const sourceNodes: NonNullable<GatsbyNode['sourceNodes']> = async (
+  gatsbyContext: SourceNodesArgs,
+  pluginOptions: PluginOptions,
+) => {
+  const { actions, schema } = gatsbyContext
+  const { createTypes } = actions
+  const { name } = pluginOptions
+
+  const nodeType = pascalCase(`${NodeType.LocalSearch} ${name}`)
+
+  createTypes([
+    schema.buildObjectType({
+      name: nodeType,
+      fields: {
+        engine: 'String!',
+        index: 'String!',
+        store: 'JSON!',
+      },
+    }),
+  ])
 }

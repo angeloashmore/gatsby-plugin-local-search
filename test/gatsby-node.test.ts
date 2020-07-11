@@ -1,8 +1,8 @@
-import { CreatePagesArgs } from 'gatsby'
+import { CreatePagesArgs, SourceNodesArgs } from 'gatsby'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 
-import { createPages } from '../src/gatsby-node'
+import { createPages, sourceNodes } from '../src/gatsby-node'
 
 const mockActions = {
   deletePage: jest.fn(),
@@ -162,14 +162,6 @@ beforeAll(() => {
 describe('createPages', () => {
   beforeEach(() => jest.clearAllMocks())
 
-  test('creates types', async () => {
-    await new Promise((res) =>
-      createPages(mockGatsbyContext, pluginOptions, res),
-    )
-
-    expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
-  })
-
   describe('with flexsearch engine', () => {
     test('creates index', async () => {
       await new Promise((res) =>
@@ -221,5 +213,24 @@ describe('createPages', () => {
       expect(mockGatsbyContext.actions.createNode).toMatchSnapshot()
       expect(index.search('needle')).toMatchSnapshot()
     })
+  })
+})
+
+describe('sourceNodes', () => {
+  test('creates types', async () => {
+    const mockGatsbyContext: SourceNodesArgs = {
+      // @ts-expect-error Partial actions object
+      actions: { createTypes: jest.fn() },
+      // @ts-expect-error Partial schema object
+      schema: {
+        buildObjectType: jest
+          .fn()
+          .mockImplementation((config) => ({ kind: 'OBJECT', config })),
+      },
+    }
+
+    await sourceNodes(mockGatsbyContext, pluginOptions)
+
+    expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
   })
 })

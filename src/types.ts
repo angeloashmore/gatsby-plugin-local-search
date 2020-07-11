@@ -1,4 +1,4 @@
-import { PluginOptions as GatsbyPluginOptions } from 'gatsby'
+import { PluginOptions as GatsbyPluginOptions, NodeInput } from 'gatsby'
 import { CreateOptions as FlexSearchCreateOptions } from 'flexsearch'
 
 export type IndexableDocument = Record<string, unknown>
@@ -10,6 +10,13 @@ export enum NodeType {
 }
 
 export type Engine = 'flexsearch' | 'lunr'
+
+export interface LocalSearchNodeInput extends NodeInput {
+  name: string
+  engine: Engine
+  index: string
+  store: Store
+}
 
 interface NormalizerInput {
   errors?: unknown
