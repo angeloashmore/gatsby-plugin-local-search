@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-json-store.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.1.1...v2.0.0-json-store.0) (2020-07-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* The `store` field now returns a JSON object rather than a String. You will likely need to remove `JSON.parse` from wherever `store` is being used.
+
+For example, when using `react-use-flexsearch`:
+
+```js
+// Before
+useFlexSearch('query', index, JSON.parse(store))
+
+// After
+useFlexSearch('query', index, store)
+```
+
+### Features
+
+* return store as JSON ([#15](https://github.com/angeloashmore/gatsby-plugin-local-search/issues/15)) ([fcd5b69](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/fcd5b69b39f6cca7ffcb1a31f5550c8658b0ca76))
+
 ### [1.1.1](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.1.0...v1.1.1) (2020-02-28)
 
 
