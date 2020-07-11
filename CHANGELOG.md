@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-next.5](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.4...v2.0.0-next.5) (2020-07-11)
+
+
+### Bug Fixes
+
+* restore resolver ([dc7dc87](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/dc7dc8792e02409686405189dd8074fbce03b1f8))
+
 ## [2.0.0-next.4](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.3...v2.0.0-next.4) (2020-07-11)
 
 
