@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-next.3](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.2...v2.0.0-next.3) (2020-07-11)
+
+
+### Bug Fixes
+
+* move createTypes to sourceNodes ([2ae2a8f](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/2ae2a8fd416a3db26b59ad17eb8ddd60f19c6ab6))
+
 ## [2.0.0-next.2](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.1...v2.0.0-next.2) (2020-07-11)
 
 
