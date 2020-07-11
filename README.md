@@ -18,7 +18,7 @@ component. See [Displaying the search results](#displaying-the-search-results).
 
 ## How to use
 
-```js
+```javascript
 // gatsby-config.js
 
 module.exports = {
