@@ -20,6 +20,7 @@ const mockActions = {
   setBabelPlugin: jest.fn(),
   setBabelPreset: jest.fn(),
   createJob: jest.fn(),
+  createJobV2: jest.fn(),
   setJob: jest.fn(),
   endJob: jest.fn(),
   setPluginStatus: jest.fn(),
@@ -65,11 +66,19 @@ const mockGatsbyContext: CreatePagesArgs & {
   hasNodeChanged: jest.fn(),
   reporter: {
     stripIndent: jest.fn(),
+    // @ts-ignore
     format: jest.fn(),
     setVerbose: jest.fn(),
     setNoColor: jest.fn(),
-    panic: jest.fn(),
-    panicOnBuild: jest.fn(),
+    // @ts-ignore
+    panic: jest.fn().mockImplementation((msg: string | Error, err?: Error) => {
+      throw err ?? msg
+    }),
+    panicOnBuild: jest
+      .fn()
+      .mockImplementation((msg: string | Error, err?: Error) => {
+        throw err ?? msg
+      }),
     error: jest.fn(),
     uptime: jest.fn(),
     success: jest.fn(),
@@ -77,19 +86,16 @@ const mockGatsbyContext: CreatePagesArgs & {
     info: jest.fn(),
     warn: jest.fn(),
     log: jest.fn(),
-    activityTimer: jest.fn(),
+    activityTimer: jest.fn().mockReturnValue({
+      start: jest.fn(),
+      end: jest.fn(),
+    }),
     createProgress: jest.fn(),
   },
   getNodeAndSavePathDependency: jest.fn(),
   cache: {
-    getAndPassUp: jest.fn(),
-    wrap: jest.fn(),
     set: jest.fn(),
-    mset: jest.fn(),
     get: jest.fn(),
-    mget: jest.fn(),
-    del: jest.fn(),
-    reset: jest.fn(),
   },
   createNodeId: jest.fn().mockReturnValue('createNodeId'),
   createContentDigest: jest.fn().mockReturnValue('createContentDigest'),
@@ -98,9 +104,28 @@ const mockGatsbyContext: CreatePagesArgs & {
     parentSpan: {},
     startSpan: jest.fn(),
   },
-  traceId: 'initial-createPages',
-  waitForCascadingActions: false,
   parentSpan: {},
+  schema: {
+    buildObjectType: jest
+      .fn()
+      .mockImplementation((config) => ({ kind: 'OBJECT', config })),
+    buildUnionType: jest.fn().mockImplementation((config) => ({
+      kind: 'UNION',
+      config,
+    })),
+    buildInterfaceType: jest
+      .fn()
+      .mockImplementation((config) => ({ kind: 'INTERFACE', config })),
+    buildInputObjectType: jest
+      .fn()
+      .mockImplementation((config) => ({ kind: 'INPUT', config })),
+    buildEnumType: jest
+      .fn()
+      .mockImplementation((config) => ({ kind: 'ENUM', config })),
+    buildScalarType: jest
+      .fn()
+      .mockImplementation((config) => ({ kind: 'SCALAR', config })),
+  },
   graphql: jest.fn(),
 }
 
@@ -135,7 +160,7 @@ const pluginOptions: PluginOptions = {
   engine: Engine.FlexSearch,
   query: 'query',
   normalizer: ({ data }) =>
-    (data as QueryResult['data']).allNode.edges.map(node => ({
+    (data as QueryResult['data']).allNode.edges.map((node) => ({
       id: node.id,
       foo: node.foo,
     })),
@@ -152,8 +177,8 @@ describe('createPages', () => {
   beforeEach(() => jest.clearAllMocks())
 
   test('creates types', async () => {
-    await new Promise(res =>
-      createPages!(mockGatsbyContext, pluginOptions, res),
+    await new Promise((res) =>
+      createPages(mockGatsbyContext, pluginOptions, res),
     )
 
     expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
@@ -161,8 +186,8 @@ describe('createPages', () => {
 
   describe('with flexsearch engine', () => {
     test('creates index', async () => {
-      await new Promise(res =>
-        createPages!(mockGatsbyContext, pluginOptions, res),
+      await new Promise((res) =>
+        createPages(mockGatsbyContext, pluginOptions, res),
       )
 
       const createNode = mockGatsbyContext.actions.createNode as jest.Mock
@@ -179,8 +204,8 @@ describe('createPages', () => {
       const spy = jest.spyOn(FlexSearch, 'create')
       const engineOptions = { foo: 'bar' }
 
-      await new Promise(res =>
-        createPages!(
+      await new Promise((res) =>
+        createPages(
           mockGatsbyContext,
           { ...pluginOptions, engineOptions },
           res,
@@ -194,8 +219,8 @@ describe('createPages', () => {
 
   describe('with lunr engine', () => {
     test('creates index', async () => {
-      await new Promise(res =>
-        createPages!(
+      await new Promise((res) =>
+        createPages(
           mockGatsbyContext,
           { ...pluginOptions, engine: Engine.Lunr },
           res,

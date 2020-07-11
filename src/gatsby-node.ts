@@ -20,7 +20,7 @@ export enum Engine {
 }
 
 interface NormalizerInput {
-  errors?: any
+  errors?: unknown
   data?: unknown
 }
 
@@ -35,13 +35,8 @@ export interface PluginOptions extends GatsbyPluginOptions {
   normalizer: (input: NormalizerInput) => IndexableDocument[]
 }
 
-interface IndexableDocument {
-  [key: string]: unknown
-}
-
-interface Store {
-  [key: string]: object
-}
+type IndexableDocument = Record<string, unknown>
+type Store = Record<string, unknown>
 
 enum NodeType {
   LocalSearch = 'LocalSearch',
@@ -51,7 +46,7 @@ interface LocalSearchNodeInput extends NodeInput {
   name: string
   engine: Engine
   index: string
-  store: object
+  store: Store
 }
 
 const createFlexSearchIndexExport = (
@@ -62,7 +57,7 @@ const createFlexSearchIndexExport = (
 
   const index = FlexSearch.create<IndexableDocument>(engineOptions)
 
-  documents.forEach(doc => {
+  documents.forEach((doc) => {
     const serializedDoc = JSON.stringify(
       indexFields ? pick(doc, indexFields) : doc,
     )
@@ -82,10 +77,10 @@ const createLunrIndexExport = (
 
   const fields = indexFields ?? Object.keys(documents[0])
 
-  const index = lunr(function() {
+  const index = lunr(function () {
     this.ref(ref)
-    fields.forEach(field => this.field(field))
-    documents.forEach(doc => this.add(doc))
+    fields.forEach((field) => this.field(field))
+    documents.forEach((doc) => this.add(doc))
   })
 
   return JSON.stringify(index)
@@ -115,7 +110,7 @@ const createIndexExport = (
 
 // Callback style is necessary since createPages cannot be async or return a
 // Promise. At least, that's what GatsbyNode['createNodes'] says.
-export const createPages: GatsbyNode['createPages'] = (
+export const createPages: NonNullable<GatsbyNode['createPages']> = (
   gatsbyContext: CreatePagesArgs,
   pluginOptions: PluginOptions,
   cb: PluginCallback,
@@ -126,6 +121,7 @@ export const createPages: GatsbyNode['createPages'] = (
     reporter,
     createNodeId,
     createContentDigest,
+    schema,
   } = gatsbyContext
   const { createNode, createTypes } = actions
   const {
@@ -138,7 +134,7 @@ export const createPages: GatsbyNode['createPages'] = (
   } = pluginOptions
 
   graphql(query)
-    .then(result => {
+    .then((result) => {
       if (result.errors) {
         reporter.error(
           'The provided GraphQL query contains errors. The index will not be created.',
@@ -149,7 +145,7 @@ export const createPages: GatsbyNode['createPages'] = (
 
       return Promise.resolve(normalizer(result))
     })
-    .then(documents => {
+    .then((documents) => {
       if (!documents) documents = []
 
       if (documents.length < 1)
@@ -158,7 +154,7 @@ export const createPages: GatsbyNode['createPages'] = (
         )
 
       const filteredDocuments = documents.filter(
-        doc => doc[ref] !== undefined && doc[ref] !== null,
+        (doc) => doc[ref] !== undefined && doc[ref] !== null,
       )
 
       const index = createIndexExport(
@@ -190,13 +186,16 @@ export const createPages: GatsbyNode['createPages'] = (
 
       createNode(node)
 
-      createTypes(`
-        type ${nodeType} extends Node @dontInfer {
-          engine: String!
-          index: String!
-          store: JSON!
-        }
-      `)
+      createTypes([
+        schema.buildObjectType({
+          name: nodeType,
+          fields: {
+            engine: 'String!',
+            index: 'String!',
+            store: 'JSON!',
+          },
+        }),
+      ])
     })
     .finally(() => cb(null))
 }

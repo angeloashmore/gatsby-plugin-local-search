@@ -4,13 +4,19 @@ exports[`createPages creates types 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "
-        type LocalSearchName extends Node @dontInfer {
-          engine: String!
-          index: String!
-          store: JSON!
-        }
-      ",
+      Array [
+        Object {
+          "config": Object {
+            "fields": Object {
+              "engine": "String!",
+              "index": "String!",
+              "store": "JSON!",
+            },
+            "name": "LocalSearchName",
+          },
+          "kind": "OBJECT",
+        },
+      ],
     ],
   ],
   "results": Array [
