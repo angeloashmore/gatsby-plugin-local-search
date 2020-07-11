@@ -1,46 +1,18 @@
 import lunr from 'lunr'
-import FlexSearch, {
-  CreateOptions as FlexSearchCreateOptions,
-} from 'flexsearch'
-import {
-  GatsbyNode,
-  CreatePagesArgs,
-  PluginOptions as GatsbyPluginOptions,
-  PluginCallback,
-  NodeInput,
-} from 'gatsby'
+import FlexSearch from 'flexsearch'
+import { GatsbyNode, CreatePagesArgs, PluginCallback, NodeInput } from 'gatsby'
 import { pick } from 'lodash'
 import { pascalCase } from 'pascal-case'
 
+import {
+  IndexableDocument,
+  Engine,
+  NodeType,
+  PluginOptions,
+  Store,
+} from './types'
+
 const DEFAULT_REF = 'id'
-
-export enum Engine {
-  FlexSearch = 'flexsearch',
-  Lunr = 'lunr',
-}
-
-interface NormalizerInput {
-  errors?: unknown
-  data?: unknown
-}
-
-export interface PluginOptions extends GatsbyPluginOptions {
-  name: string
-  engine: Engine
-  engineOptions?: FlexSearchCreateOptions
-  ref?: string
-  index?: string[]
-  store?: string[]
-  query: string
-  normalizer: (input: NormalizerInput) => IndexableDocument[]
-}
-
-type IndexableDocument = Record<string, unknown>
-type Store = Record<string, unknown>
-
-enum NodeType {
-  LocalSearch = 'LocalSearch',
-}
 
 interface LocalSearchNodeInput extends NodeInput {
   name: string
@@ -96,10 +68,10 @@ const createIndexExport = (
   const { name, engine } = pluginOptions
 
   switch (engine) {
-    case Engine.FlexSearch:
+    case 'flexsearch':
       return createFlexSearchIndexExport(documents, pluginOptions)
 
-    case Engine.Lunr:
+    case 'lunr':
       return createLunrIndexExport(documents, pluginOptions)
 
     default:

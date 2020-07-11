@@ -3,7 +3,6 @@ import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 
 import { createPages } from '../src/gatsby-node'
-import { PluginOptions, Engine } from '../src/gatsby-node'
 
 const mockActions = {
   deletePage: jest.fn(),
@@ -129,20 +128,7 @@ const mockGatsbyContext: CreatePagesArgs & {
   graphql: jest.fn(),
 }
 
-interface QueryResult {
-  data: {
-    allNode: {
-      edges: TestNode[]
-    }
-  }
-}
-
-interface TestNode {
-  id?: string
-  foo: string
-}
-
-const mockQueryResult: QueryResult = {
+const mockQueryResult = {
   data: {
     allNode: {
       edges: [
@@ -153,14 +139,14 @@ const mockQueryResult: QueryResult = {
       ],
     },
   },
-}
+} as const
 
-const pluginOptions: PluginOptions = {
+const pluginOptions = {
   name: 'name',
-  engine: Engine.FlexSearch,
+  engine: 'flexsearch',
   query: 'query',
-  normalizer: ({ data }) =>
-    (data as QueryResult['data']).allNode.edges.map((node) => ({
+  normalizer: ({ data }: typeof mockQueryResult) =>
+    data.allNode.edges.map((node) => ({
       id: node.id,
       foo: node.foo,
     })),
@@ -222,7 +208,7 @@ describe('createPages', () => {
       await new Promise((res) =>
         createPages(
           mockGatsbyContext,
-          { ...pluginOptions, engine: Engine.Lunr },
+          { ...pluginOptions, engine: 'lunr' },
           res,
         ),
       )
