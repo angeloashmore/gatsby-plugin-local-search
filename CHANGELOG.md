@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-next.2](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.1...v2.0.0-next.2) (2020-07-11)
+
+
+### Bug Fixes
+
+* only export Gatsby APIs in gatsby-node ([93eaac2](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/93eaac263012ae16f77be4badf6540a4f2b06a89))
+
 ## [2.0.0-next.1](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.0...v2.0.0-next.1) (2020-07-11)
 
 ## [2.0.0-next.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v1.1.1...v2.0.0-next.0) (2020-07-11)
