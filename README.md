@@ -9,9 +9,8 @@ The following engines are supported:
 - [Lunr][lunr]
 
 This plugin provides a search index and store using the selected engine. To
-display search results, pair the index and store with a compatible React hook
-or component. See [Displaying the search
-results](#displaying-the-search-results).
+display search results, pair the index and store with a compatible React hook or
+component. See [Displaying the search results](#displaying-the-search-results).
 
 ## Install
 
@@ -19,7 +18,7 @@ results](#displaying-the-search-results).
 
 ## How to use
 
-```js
+```javascript
 // gatsby-config.js
 
 module.exports = {
@@ -94,8 +93,8 @@ module.exports = {
 
 ## How to query
 
-A new node type becomes available named `localSearch${name}`, where `${name}`
-is the name provided in the options. In the above example, the node would be
+A new node type becomes available named `localSearch${name}`, where `${name}` is
+the name provided in the options. In the above example, the node would be
 accessed with `localSearchPages`.
 
 The search index and store are made available as fields on the node.
@@ -104,8 +103,8 @@ The search index and store are made available as fields on the node.
   the plugin options.
 - **`store`**: (JSON) The store used to map a search result's `ref` key to data.
 
-Note that `store` is an object but does not require you to explicitly query
-each field.
+Note that `store` is an object but does not require you to explicitly query each
+field.
 
 ```graphql
 {
@@ -118,8 +117,8 @@ each field.
 
 ## Displaying the search results
 
-This plugin provides a search index and store object but leaves presentation
-and search functionality up to you.
+This plugin provides a search index and store object but leaves presentation and
+search functionality up to you.
 
 The following React components/hooks are recommended pairings:
 

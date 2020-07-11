@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createPages creates types 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Array [
+        Object {
+          "config": Object {
+            "fields": Object {
+              "engine": "String!",
+              "index": "String!",
+              "store": "JSON!",
+            },
+            "name": "LocalSearchName",
+          },
+          "kind": "OBJECT",
+        },
+      ],
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages with flexsearch engine creates index 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "engine": "flexsearch",
+        "id": "createNodeId",
+        "index": "[[{\\"i\\":[\\"id1\\",\\"id2\\"],\\"id\\":[\\"id1\\",\\"id2\\"]},{\\"id1\\":[\\"id1\\"],\\"f\\":[\\"id1\\",\\"id2\\"],\\"fo\\":[\\"id1\\",\\"id2\\"],\\"foo\\":[\\"id1\\",\\"id2\\"],\\"id2\\":[\\"id2\\"]},{\\"b\\":[\\"id1\\"],\\"ba\\":[\\"id1\\"],\\"bar\\":[\\"id1\\"],\\"n\\":[\\"id2\\"],\\"ne\\":[\\"id2\\"],\\"nee\\":[\\"id2\\"],\\"need\\":[\\"id2\\"],\\"needl\\":[\\"id2\\"],\\"needle\\":[\\"id2\\"]},{},{},{},{},{},{}],{},[\\"@id1\\",\\"@id2\\"]]",
+        "internal": Object {
+          "contentDigest": "createContentDigest",
+          "type": "LocalSearchName",
+        },
+        "name": "name",
+        "store": Object {
+          "id1": Object {
+            "foo": "bar",
+            "id": "id1",
+          },
+          "id2": Object {
+            "foo": "needle",
+            "id": "id2",
+          },
+        },
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages with flexsearch engine creates index 2`] = `
+Array [
+  "id2",
+]
+`;
+
+exports[`createPages with lunr engine creates index 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "engine": "lunr",
+        "id": "createNodeId",
+        "index": "{\\"version\\":\\"2.3.8\\",\\"fields\\":[\\"id\\",\\"foo\\"],\\"fieldVectors\\":[[\\"id/id1\\",[0,0.693]],[\\"foo/id1\\",[1,0.693]],[\\"id/id2\\",[2,0.693]],[\\"foo/id2\\",[3,0.693]]],\\"invertedIndex\\":[[\\"bar\\",{\\"_index\\":1,\\"id\\":{},\\"foo\\":{\\"id1\\":{}}}],[\\"id1\\",{\\"_index\\":0,\\"id\\":{\\"id1\\":{}},\\"foo\\":{}}],[\\"id2\\",{\\"_index\\":2,\\"id\\":{\\"id2\\":{}},\\"foo\\":{}}],[\\"needl\\",{\\"_index\\":3,\\"id\\":{},\\"foo\\":{\\"id2\\":{}}}]],\\"pipeline\\":[\\"stemmer\\"]}",
+        "internal": Object {
+          "contentDigest": "createContentDigest",
+          "type": "LocalSearchName",
+        },
+        "name": "name",
+        "store": Object {
+          "id1": Object {
+            "foo": "bar",
+            "id": "id1",
+          },
+          "id2": Object {
+            "foo": "needle",
+            "id": "id2",
+          },
+        },
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`createPages with lunr engine creates index 2`] = `
+Array [
+  Object {
+    "matchData": Object {
+      "metadata": Object {
+        "needl": Object {
+          "foo": Object {},
+        },
+      },
+    },
+    "ref": "id2",
+    "score": 0.693,
+  },
+]
+`;
