@@ -1,7 +1,7 @@
 {
   "name": "gatsby-plugin-local-search",
   "description": "Gatsby plugin for providing client-side search for data available in Gatsby's GraphQL layer using a variety of engines",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "main": "dist/gatsby-plugin-local-search.js",
   "typings": "dist/gatsby-node.d.ts",
