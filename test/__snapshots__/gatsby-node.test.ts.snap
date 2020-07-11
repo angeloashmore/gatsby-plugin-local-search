@@ -92,7 +92,7 @@ Array [
 ]
 `;
 
-exports[`sourceNodes creates types 1`] = `
+exports[`createSchemaCustomization creates types 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [

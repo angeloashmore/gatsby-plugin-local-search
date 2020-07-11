@@ -4,7 +4,7 @@ import {
   GatsbyNode,
   CreatePagesArgs,
   PluginCallback,
-  SourceNodesArgs,
+  CreateSchemaCustomizationArgs,
 } from 'gatsby'
 import { pick } from 'lodash'
 import { pascalCase } from 'pascal-case'
@@ -159,8 +159,10 @@ export const createPages: NonNullable<GatsbyNode['createPages']> = (
     .finally(() => cb(null))
 }
 
-export const sourceNodes: NonNullable<GatsbyNode['sourceNodes']> = async (
-  gatsbyContext: SourceNodesArgs,
+export const createSchemaCustomization: NonNullable<
+  GatsbyNode['createSchemaCustomization']
+> = async (
+  gatsbyContext: CreateSchemaCustomizationArgs,
   pluginOptions: PluginOptions,
 ) => {
   const { actions, schema } = gatsbyContext

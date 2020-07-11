@@ -1,8 +1,8 @@
-import { CreatePagesArgs, SourceNodesArgs } from 'gatsby'
+import { CreatePagesArgs, CreateSchemaCustomizationArgs } from 'gatsby'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 
-import { createPages, sourceNodes } from '../src/gatsby-node'
+import { createPages, createSchemaCustomization } from '../src/gatsby-node'
 
 const mockActions = {
   deletePage: jest.fn(),
@@ -216,9 +216,9 @@ describe('createPages', () => {
   })
 })
 
-describe('sourceNodes', () => {
+describe('createSchemaCustomization', () => {
   test('creates types', async () => {
-    const mockGatsbyContext: SourceNodesArgs = {
+    const mockGatsbyContext: CreateSchemaCustomizationArgs = {
       // @ts-expect-error Partial actions object
       actions: { createTypes: jest.fn() },
       // @ts-expect-error Partial schema object
@@ -229,7 +229,7 @@ describe('sourceNodes', () => {
       },
     }
 
-    await sourceNodes(mockGatsbyContext, pluginOptions)
+    await createSchemaCustomization(mockGatsbyContext, pluginOptions)
 
     expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
   })
