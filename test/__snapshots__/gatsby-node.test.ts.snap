@@ -92,29 +92,6 @@ Array [
 ]
 `;
 
-exports[`createResolvers creates resolvers 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      Object {
-        "Query": Object {
-          "localSearchName": Object {
-            "resolve": [Function],
-            "type": "LocalSearchName",
-          },
-        },
-      },
-    ],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
-`;
-
 exports[`createSchemaCustomization creates types 1`] = `
 [MockFunction] {
   "calls": Array [
@@ -123,11 +100,32 @@ exports[`createSchemaCustomization creates types 1`] = `
         Object {
           "config": Object {
             "fields": Object {
-              "engine": "String!",
-              "id": "ID!",
-              "index": "String!",
-              "name": "String!",
-              "store": "JSON!",
+              "engine": Object {
+                "description": "The search engine used to create the index.",
+                "type": "String!",
+              },
+              "index": Object {
+                "description": "The search index created using the selected engine.",
+                "type": "String!",
+              },
+              "name": Object {
+                "description": "The name of the index.",
+                "type": "String!",
+              },
+              "publicIndexURL": Object {
+                "description": "Save the index to the site's static directory and return a public URL to it",
+                "resolve": [Function],
+                "type": "String!",
+              },
+              "publicStoreURL": Object {
+                "description": "Save the store to the site's static directory and return a public URL to it",
+                "resolve": [Function],
+                "type": "String!",
+              },
+              "store": Object {
+                "description": "A JSON object used to map search results to their data.",
+                "type": "JSON!",
+              },
             },
             "interfaces": Array [
               "Node",
