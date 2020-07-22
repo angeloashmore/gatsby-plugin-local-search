@@ -1,16 +1,8 @@
-import {
-  CreatePagesArgs,
-  CreateSchemaCustomizationArgs,
-  CreateResolversArgs,
-} from 'gatsby'
+import { CreatePagesArgs, CreateSchemaCustomizationArgs } from 'gatsby'
 import lunr from 'lunr'
 import FlexSearch from 'flexsearch'
 
-import {
-  createPages,
-  createSchemaCustomization,
-  createResolvers,
-} from '../src/gatsby-node'
+import { createPages, createSchemaCustomization } from '../src/gatsby-node'
 import { PluginOptions } from '../src/types'
 
 const mockQueryResult = {
@@ -109,19 +101,5 @@ describe('createSchemaCustomization', () => {
     await createSchemaCustomization(mockGatsbyContext, pluginOptions)
 
     expect(mockGatsbyContext.actions.createTypes).toMatchSnapshot()
-  })
-})
-
-describe('createResolvers', () => {
-  // @ts-expect-error Partial createResolvers context
-  const mockGatsbyContext: CreateResolversArgs = {
-    createResolvers: jest.fn(),
-    createNodeId: jest.fn().mockReturnValue('createNodeId'),
-  }
-
-  test('creates resolvers', async () => {
-    await createResolvers(mockGatsbyContext, pluginOptions)
-
-    expect(mockGatsbyContext.createResolvers).toMatchSnapshot()
   })
 })
