@@ -177,6 +177,7 @@ export const createSchemaCustomization: NonNullable<
         index: 'String!',
         store: 'JSON!',
       },
+      interfaces: ['Node'],
     }),
   ])
 }
