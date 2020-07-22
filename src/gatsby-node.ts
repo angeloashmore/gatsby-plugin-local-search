@@ -199,7 +199,7 @@ export const createSchemaCustomization: NonNullable<
         publicIndexURL: {
           type: 'String!',
           description:
-            "Save the index to the site's static directory and return a public URL to it",
+            "Save the index to the site's static directory and return a public URL to it.",
           resolve: (node: LocalSearchNodeInput) => {
             const filename = `${node.internal.contentDigest}.index.txt`
 
@@ -226,7 +226,7 @@ export const createSchemaCustomization: NonNullable<
         publicStoreURL: {
           type: 'String!',
           description:
-            "Save the store to the site's static directory and return a public URL to it",
+            "Save the store to the site's static directory and return a public URL to it.",
           resolve: (node: LocalSearchNodeInput) => {
             const filename = `${node.internal.contentDigest}.store.json`
 

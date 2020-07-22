@@ -113,12 +113,12 @@ exports[`createSchemaCustomization creates types 1`] = `
                 "type": "String!",
               },
               "publicIndexURL": Object {
-                "description": "Save the index to the site's static directory and return a public URL to it",
+                "description": "Save the index to the site's static directory and return a public URL to it.",
                 "resolve": [Function],
                 "type": "String!",
               },
               "publicStoreURL": Object {
-                "description": "Save the store to the site's static directory and return a public URL to it",
+                "description": "Save the store to the site's static directory and return a public URL to it.",
                 "resolve": [Function],
                 "type": "String!",
               },
