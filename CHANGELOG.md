@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-next.6](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.5...v2.0.0-next.6) (2020-07-22)
+
+
+### Features
+
+* add publicIndexURL and publicStoreURL ([8ed9a0e](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/8ed9a0e5dc0b254356e278ae5026822d8e2cdae0)), closes [#24](https://github.com/angeloashmore/gatsby-plugin-local-search/issues/24)
+
+
+### Bug Fixes
+
+* add Node interface to node ([88878e5](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/88878e5543b883aae82b7ef310ad71c8d8e8e33d))
+
 ## [2.0.0-next.5](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.4...v2.0.0-next.5) (2020-07-11)
 
 
