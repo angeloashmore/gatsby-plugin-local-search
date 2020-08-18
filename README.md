@@ -148,7 +148,7 @@ search functionality up to you.
 The following React components/hooks are recommended pairings:
 
 - **FlexSearch**: [`react-use-flexsearch`][react-use-flexsearch] (hook)
-- **Lunr**: [`react-lunr`][react-lunr] (hook, component)
+- **Lunr**: [`react-lunr`][react-lunr] (hook)
 
 [flexsearch]: https://github.com/nextapps-de/flexsearch
 [lunr]: https://lunrjs.com/
