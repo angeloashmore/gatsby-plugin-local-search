@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.6...v2.0.0) (2020-08-18)
+
 ## [2.0.0-next.6](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.5...v2.0.0-next.6) (2020-07-22)
 
 
