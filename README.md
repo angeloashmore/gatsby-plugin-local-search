@@ -79,7 +79,7 @@ module.exports = {
         // containing properties to index. The objects must contain the `ref`
         // field above (default: 'id'). This is required.
         normalizer: ({ data }) =>
-          data.allMarkdownRemark.nodes.map(node => ({
+          data.allMarkdownRemark.nodes.map((node) => ({
             id: node.id,
             path: node.frontmatter.path,
             title: node.frontmatter.title,
@@ -114,6 +114,31 @@ field.
   }
 }
 ```
+
+### Lazy-loading the index and/or store
+
+The index and store can become large depending on the number of documents and
+their fields. To reduce your bundle size and delay fetching these pieces of data
+until needed, you can query a URL for both the index and store like the
+following.
+
+```graphql
+{
+  localSearchPages {
+    publicIndexURL
+    publicStoreURL
+  }
+}
+```
+
+Both `publicIndexURL` and `publicStoreURL` will return a public URL that can be
+fetched at run-time. For example, you could call `fetch` with the URLs to load
+the data in the background only as the user focuses your interface's search
+input.
+
+The files contain data identical to querying for `index` and `store` directly
+and will be saved in your site's `/public` folder. This functionality if very
+similar to `gatsby-source-filesystem`'s `publicURL` field.
 
 ## Displaying the search results
 
