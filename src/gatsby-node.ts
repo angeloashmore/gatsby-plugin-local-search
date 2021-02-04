@@ -19,6 +19,8 @@ import {
 } from './types'
 
 const DEFAULT_REF = 'id'
+const LUNR_DEFAULT_B = 0.75
+const LUNR_DEFAULT_K1 = 1.2
 
 const msg = (input: string) => `gatsby-plugin-local-search - ${input}`
 
@@ -46,12 +48,15 @@ const createLunrIndexExport = (
   documents: IndexableDocument[],
   pluginOptions: PluginOptions,
 ): string => {
-  const { ref = DEFAULT_REF, index: indexFields } = pluginOptions
+  const { ref = DEFAULT_REF, index: indexFields, lunrOptions } = pluginOptions
 
   const fields =
     indexFields ?? documents.length > 0 ? Object.keys(documents[0]) : []
 
+  const { b = LUNR_DEFAULT_B, k1 = LUNR_DEFAULT_K1} = lunrOptions
   const index = lunr(function () {
+    this.b(b)
+    this.k1(k1)
     this.ref(ref)
     fields.forEach((field) => this.field(field))
     documents.forEach((doc) => this.add(doc))
