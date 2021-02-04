@@ -2,8 +2,8 @@ import { PluginOptions as GatsbyPluginOptions, NodeInput, Node } from 'gatsby'
 import { CreateOptions as FlexSearchCreateOptions } from 'flexsearch'
 
 export type LunrPluginOptions = {
-    k1?: number;
-    b?: number;
+    k1?: number
+    b?: number
   };
 
 export interface PartialContext {
@@ -37,7 +37,8 @@ interface NormalizerInput {
 export interface PluginOptions extends GatsbyPluginOptions {
   name: string
   engine: Engine
-  engineOptions?: FlexSearchCreateOptions | LunrPluginOptions
+  engineOptions?: FlexSearchCreateOptions
+  lunrOptions?: any
   ref?: string
   index?: string[]
   store?: string[]
