@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0...v2.0.1) (2021-04-07)
+
+
+### Bug Fixes
+
+* index fields in lurn index export ([#36](https://github.com/angeloashmore/gatsby-plugin-local-search/issues/36)) ([68b280f](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/68b280f159f9cc84177184b5fac743f394b3463e))
+
 ## [2.0.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.6...v2.0.0) (2020-08-18)
 
 ## [2.0.0-next.6](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.5...v2.0.0-next.6) (2020-07-22)
