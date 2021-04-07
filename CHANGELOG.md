@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* index fields in lurn index export ([#36](https://github.com/angeloashmore/gatsby-plugin-local-search/issues/36)) ([68b280f](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/68b280f159f9cc84177184b5fac743f394b3463e))
+* correctly use provided index fields option when using Lunr ([#36](https://github.com/angeloashmore/gatsby-plugin-local-search/issues/36)) ([68b280f](https://github.com/angeloashmore/gatsby-plugin-local-search/commit/68b280f159f9cc84177184b5fac743f394b3463e))
 
 ## [2.0.0](https://github.com/angeloashmore/gatsby-plugin-local-search/compare/v2.0.0-next.6...v2.0.0) (2020-08-18)
 
