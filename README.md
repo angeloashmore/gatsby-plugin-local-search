@@ -140,6 +140,20 @@ The files contain data identical to querying for `index` and `store` directly
 and will be saved in your site's `/public` folder. This functionality if very
 similar to `gatsby-source-filesystem`'s `publicURL` field.
 
+## FlexSearch Options
+
+The `engineOptions` config allows you to change the FlexSearch Index options.
+These are detailed extensively in the [FlexSearch Documentation](https://github.com/nextapps-de/flexsearch#options),
+including all the available keys and their valid values.
+
+It accepts an object containing the available keys and their valid settings are listed in the repo. 
+
+These options give you a high degree of customisation, but changes from the defaults 
+can definitely affect performance. 
+
+One useful example is turning on 'fuzzy' matching
+by changing the tokeniser to one of the other options, such as 'forward': `engineOptions: { tokenize: "forward" },`
+
 ## Displaying the search results
 
 This plugin provides a search index and store object but leaves presentation and
