@@ -41,7 +41,7 @@ module.exports = {
         // for advanced users.
         //
         // Note: Only the flexsearch engine supports options.
-        engineOptions: 'speed',
+        engineOptions: 'default',
 
         // GraphQL query used to fetch all data for the search index. This is
         // required.
@@ -139,6 +139,60 @@ input.
 The files contain data identical to querying for `index` and `store` directly
 and will be saved in your site's `/public` folder. This functionality if very
 similar to `gatsby-source-filesystem`'s `publicURL` field.
+
+## FlexSearch Options
+
+The `engineOptions` config allows you to change the FlexSearch Index options.
+These are detailed extensively in the [FlexSearch Documentation](https://github.com/nextapps-de/flexsearch#options),
+including all the available keys and their valid values.
+
+It accepts a single string matching one of the presets, or an object containing
+the available keys and their valid settings as listed in the FlexSearch documentation.
+
+These options give you a high degree of customisation, but changes from the defaults 
+can definitely affect performance. The FlexSearch Documentation has extensive details on
+performance impacts of various settings, as well as their effects. 
+
+They generally recommend using the presets as a starting point and appling further custom configuration 
+to get the best out for your situation.
+
+One useful example is turning on 'fuzzy' matching by changing the tokeniser to one of
+the other options, such as 'forward': `engineOptions: { tokenize: "forward" },`
+
+Here are the same examples as listed in [FlexSearch Useage](https://github.com/nextapps-de/flexsearch#usage),
+and how you would define them with `engineOptions`:
+
+#### Create a new index (using only defaults)
+
+```js
+engineOptions: '',
+```
+
+#### Create a new index and choosing one of the presets:
+
+```js
+engineOptions: 'performance',
+```
+
+#### Create a new index with custom options:
+
+```js
+engineOptions: {
+    charset: "latin:extra",
+    tokenize: "reverse",
+    resolution: 9
+},
+```
+
+#### Create a new index and extend a preset with custom options:
+
+```js
+engineOptions: {
+    preset: "memory",
+    tokenize: "forward",
+    resolution: 5
+},
+```
 
 ## Displaying the search results
 
