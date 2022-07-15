@@ -137,7 +137,7 @@ the data in the background only as the user focuses your interface's search
 input.
 
 The files contain data identical to querying for `index` and `store` directly
-and will be saved in your site's `/public` folder. This functionality if very
+and will be saved in your site's `/public` folder. This functionality is very
 similar to `gatsby-source-filesystem`'s `publicURL` field.
 
 ## FlexSearch Options
