@@ -31,12 +31,12 @@ const createFlexSearchIndexExport = (
   const index = FlexSearch.create<IndexableDocument>(engineOptions)
 
   documents.forEach((doc) => {
-    const serializedDoc = JSON.stringify(
+    const docFieldValues = Object.values(
       indexFields ? pick(doc, indexFields) : doc,
     )
     // Using "as number" due to FlexSearch's types, but it could technically be
     // a string as well.
-    index.add(doc[ref] as number, serializedDoc)
+    index.add(doc[ref] as number, JSON.stringify(docFieldValues))
   })
 
   return index.export()
