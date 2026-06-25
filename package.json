@@ -30,6 +30,9 @@
     "type": "git",
     "url": "https://github.com/angeloashmore/gatsby-plugin-local-search.git"
   },
+  "bugs": {
+    "url": "https://github.com/angeloashmore/gatsby-plugin-local-search/issues"
+  },
   "keywords": [
     "gatsby",
     "gatsby-plugin",
